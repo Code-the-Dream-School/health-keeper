@@ -4,8 +4,27 @@
 
 1. Install Ruby `3.2.1`.
 2. Create `.env` file in root folder of the project.
-2. Install [PostgreSQL](https://www.postgresql.org/download/) `>=14.13`.
-3. Add corresponded env vars to `.env` file with DB credentials. E.g.:
+3. Install [PostgreSQL](https://www.postgresql.org/download/) `>=14.13`.
+   '''
+   sudo apt update
+   sudo apt install postgresql-14
+   '''
+4. Create PostgreSQL user and set password:
+   '''
+   sudo -u postgres psql
+   '''
+   '''
+   CREATE USER healthkeeper WITH PASSWORD 'magic';
+   '''
+   '''
+   ALTER USER healthkeeper CREATEDB;
+   '''
+6. Quit postgres
+   '''
+   \q
+   '''
+   
+7. Add corresponded env variables to `.env` file with DB credentials. E.g.:
 ```
 HEALTHKEEPER_DEVELOPMENT_DATABASE = "healthkeeper_development"
 HEALTHKEEPER_DEVELOPMENT_DATABASE_USERNAME = "healthkeeper"
@@ -16,11 +35,37 @@ HEALTHKEEPER_TEST_DATABASE_USERNAME = "healthkeeper"
 HEALTHKEEPER_TEST_DATABASE_PASSWORD = "magic"
 ```
 4. Run `./bin/bundle install`
-5. Run `rails db:setup`.
-6. In order to recreate DB run `rails db:reset`.
-7. In order to (re)populate DB with a testing data run `rails db:seed`.
-8. To run Rails server use `./bin/dev` instead of `rails s`/`rails server` (see [next chapter](#bootstrap-and-tailwindCSS) if curious why).
+6. Run `rails db:setup`.
+7. In order to recreate DB run `rails db:reset`.
+8. In order to (re)populate DB with a testing data run `rails db:seed`.
+9. Run 'rake db:migrate'
+10. To run Rails server use `./bin/dev` instead of `rails s`/`rails server` (see [next chapter](#bootstrap-and-tailwindCSS) if curious why).
 
+# Troubleshooting
+1. ActiveRecord::DatabaseConnectionError: There is an issue connecting to your database with your username/password, username: healthkeeper. (ActiveRecord::DatabaseConnectionError)
+   Edit the PostgreSQL authentication configuration:
+   '''
+   sudo nano /etc/postgresql/14/main/pg_hba.conf
+   '''
+   Make sure all content is all the same:
+   '''
+   # PostgreSQL Client Authentication Configuration File
+   # ===================================================
+   
+   # TYPE  DATABASE        USER            ADDRESS                 METHOD
+   
+   # Database administrative login by Unix domain socket
+   local   all             postgres                                peer
+   
+   # "local" is for Unix domain socket connections only
+   local   all             all                                     md5
+   
+   # IPv4 local connections:
+   host    all             all             127.0.0.1/32            md5
+   
+   # IPv6 local connections:
+   host    all             all             ::1/128                 md5
+   '''
 ### Bootstrap and TailwindCSS
 As we have both Bootstrap and TailwindCSS installed inside the project we need to split them somehow.
 > Thus, to utilize TailwindCSS make sure that you use the classes with the prefix.
