@@ -38,7 +38,7 @@ HEALTHKEEPER_TEST_DATABASE_PASSWORD = "magic"
 6. Run `rails db:setup`.
 7. In order to recreate DB run `rails db:reset`.
 8. In order to (re)populate DB with a testing data run `rails db:seed`.
-9. Run 'rake db:migrate'
+9. Run 'rails db:migrate'
 10. To run Rails server use `./bin/dev` instead of `rails s`/`rails server` (see [next chapter](#bootstrap-and-tailwindCSS) if curious why).
 
 # Troubleshooting
