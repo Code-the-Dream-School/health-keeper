@@ -5,26 +5,72 @@
 1. Install Ruby `3.2.1`.
 2. Create `.env` file in root folder of the project.
 3. Install [PostgreSQL](https://www.postgresql.org/download/) `>=14.13`.
+   ## For Ubuntu, Linux, and Debian
+   i. Install PostgreSQL:
    '''
    sudo apt update
    sudo apt install postgresql-14
    '''
-4. Create PostgreSQL user and set password:
+   ii. Create PostgreSQL user and set password:
    '''
    sudo -u postgres psql
    '''
    '''
    CREATE USER healthkeeper WITH PASSWORD 'magic';
-   '''
-   '''
    ALTER USER healthkeeper CREATEDB;
    '''
-6. Quit postgres
+   IV. Quit postgres
    '''
    \q
    '''
    
-7. Add corresponded env variables to `.env` file with DB credentials. E.g.:
+   ## For Windows:
+   i. Install PostgreSQL
+   '''
+   brew install postgresql@14
+   '''
+   ii. Start PostgreSQL service
+   '''
+   brew services start postgresql@14
+   '''
+   iii. Open PostgreSQL in terminal
+   '''
+   "C:\Program Files\PostgreSQL\14\bin\psql.exe" -U postgres
+   '''
+   IV. Create PostgreSQL user and set password:
+   '''
+   CREATE USER healthkeeper WITH PASSWORD 'magic';
+   ALTER USER healthkeeper CREATEDB;
+   '''
+   V. Quit postgres
+   '''
+   \q
+   '''
+   
+   ## For Mac:
+   i. Install PostgreSQL
+   '''
+   brew install postgresql@14
+   '''
+   ii. Start PostgreSQL service
+   '''
+   brew services start postgresql@14
+   '''
+   iii. Open PostgreSQL in terminal
+   '''
+   psql postgres
+   '''
+   IV. Create PostgreSQL user and set password:
+   '''
+   CREATE USER healthkeeper WITH PASSWORD 'magic';
+   ALTER USER healthkeeper CREATEDB;
+   '''
+   V. Quit postgres
+   '''
+   \q
+   '''
+   
+8. Add corresponded env variables to `.env` file with DB credentials. E.g.:
 ```
 HEALTHKEEPER_DEVELOPMENT_DATABASE = "healthkeeper_development"
 HEALTHKEEPER_DEVELOPMENT_DATABASE_USERNAME = "healthkeeper"
