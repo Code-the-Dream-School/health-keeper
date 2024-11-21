@@ -5,7 +5,11 @@ Rails.application.routes.draw do
   resources :reference_ranges
 
   resources :measurements
-  resources :lab_tests
+  resources :lab_tests do
+    collection do
+      get 'blood/new', to: 'lab_tests#new_blood', as: :new_blood
+    end
+  end
   resources :health_records
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
