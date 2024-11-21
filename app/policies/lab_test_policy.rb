@@ -19,6 +19,10 @@ class LabTestPolicy < ApplicationPolicy
     user.full_access_roles_can? || record.user == user
   end
 
+  def new_blood?
+    user.all_roles_can?
+  end
+
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.full_access_roles_can?

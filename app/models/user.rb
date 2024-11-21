@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :lab_tests, dependent: :destroy
   has_many :measurements, dependent: :destroy
   has_and_belongs_to_many :roles, :join_table => :users_roles
+  has_one :health_record
 
   validates :email, presence: true, uniqueness: true, email: true
 

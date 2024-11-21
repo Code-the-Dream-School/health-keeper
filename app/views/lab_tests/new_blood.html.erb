@@ -1,0 +1,10 @@
+<div class="tw-container tw-mx-auto tw-px-4">
+    <h1 class="tw-text-2xl tw-font-bold tw-mb-6">New Blood Test</h1>
+
+    <%= render "blood_test_form", lab_test: @lab_test, blood_biomarkers: @blood_biomarkers, health_record: @health_record, users: @users, selected_user: @selected_user, current_user: current_user %>
+
+    <div class="tw-mt-4">
+        <%= link_to "Back to lab tests", lab_tests_path, 
+        class: "tw-text-blue-500 tw-hover:text-blue-700" %>
+    </div>
+</div>

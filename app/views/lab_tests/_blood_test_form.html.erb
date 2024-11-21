@@ -1,0 +1,103 @@
+<%= form_with(model: lab_test, class: "tw-space-y-6") do |form| %>
+<% if lab_test.errors.any? %>
+<div class="tw-bg-red-50 tw-border tw-border-red-500 tw-text-red-700 tw-px-4 tw-py-3 tw-rounded">
+    <h2 class="tw-text-lg tw-font-medium"><%= pluralize(lab_test.errors.count, "error") %> prohibited this test from being saved:</h2>
+    <ul class="tw-list-disc tw-list-inside">
+        <% lab_test.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
+<% if current_user.has_any_role?(:admin, :doctor) %>
+<div class="tw-mb-6">
+    <%= label_tag :user_id, "Select Patient", class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+    <%= select_tag :user_id, 
+      options_from_collection_for_select(users, :id, :full_name, selected_user.id),
+      class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm",
+      data: { action: "change->form#submit" } %>
+</div>
+<% end %>
+
+<div class="tw-grid tw-grid-cols-1 tw-gap-6 md:tw-grid-cols-2">
+    <div>
+        <%= form.label :biomarker_id, "Blood Marker", class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+        <%= form.collection_select :biomarker_id, 
+          blood_biomarkers, 
+          :id, 
+          :name, 
+          { prompt: "Select blood marker" }, 
+          class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm",
+          required: true %>
+    </div>
+
+    <div>
+        <%= form.label :value, class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+        <%= form.number_field :value, 
+          step: :any, 
+          class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm",
+          required: true %>
+    </div>
+
+    <div>
+        <%= form.label :reference_range_id, "Reference Range", class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+        <%= form.grouped_collection_select :reference_range_id,
+          blood_biomarkers,
+          :reference_ranges,
+          :name,
+          :id,
+          ->(range) { "#{range.min_value}-#{range.max_value} #{range.unit}" },
+          { prompt: "Select reference range" },
+          class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm",
+          required: true %>
+        <%= form.hidden_field :unit, value: "", data: { "reference-range-unit": true } %>
+    </div>
+</div>
+
+<div>
+    <%= form.label :notes, class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+    <%= form.text_area :notes, 
+        rows: 3,
+        class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm" %>
+</div>
+
+<%= form.hidden_field :recordable_type, value: "HealthRecord" %>
+<%= form.hidden_field :recordable_id, value: health_record.id %>
+
+<div>
+    <%= form.submit "Save Blood Test", 
+        class: "btn btn-primary" %>
+</div>
+<% end %>
+
+<%= javascript_tag do %>
+document.addEventListener('change', function(event) {
+if (event.target.id === 'user_id') {
+const userId = event.target.value;
+window.location.href = '<%= new_blood_lab_tests_path %>?user_id=' + userId;
+}
+
+if (event.target.name === 'lab_test[biomarker_id]') {
+const biomarkerId = event.target.value;
+const referenceRangeSelect = document.querySelector('[name="lab_test[reference_range_id]"]');
+
+// Find the first reference range option for this biomarker
+const firstReferenceOption = Array.from(referenceRangeSelect.options).find(option => {
+return option.parentElement.label === event.target.selectedOptions[0].text;
+});
+
+if (firstReferenceOption) {
+firstReferenceOption.selected = true;
+// Trigger change event to update the unit
+referenceRangeSelect.dispatchEvent(new Event('change'));
+}
+}
+
+if (event.target.name === 'lab_test[reference_range_id]') {
+const selectedOption = event.target.selectedOptions[0];
+const unit = selectedOption.text.split(' ').pop();
+document.querySelector('[data-reference-range-unit]').value = unit;
+}
+});
+<% end %>

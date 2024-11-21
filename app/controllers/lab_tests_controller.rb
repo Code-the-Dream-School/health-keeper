@@ -30,10 +30,13 @@ class LabTestsController < ApplicationController
 
     respond_to do |format|
       if @lab_test.save
-        format.html { redirect_to @lab_test, notice: "Lab test was successfully created." }
+        format.html { redirect_to lab_test_url(@lab_test), notice: "Lab test was successfully created." }
         format.json { render :show, status: :created, location: @lab_test }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html do
+          @blood_biomarkers = Biomarker.includes(:reference_ranges)
+          render :new_blood, status: :unprocessable_entity
+        end
         format.json { render json: @lab_test.errors, status: :unprocessable_entity }
       end
     end
@@ -67,6 +70,27 @@ class LabTestsController < ApplicationController
       end
       format.json { head :no_content }
     end
+  end
+
+  def new_blood
+    @lab_test = LabTest.new
+    @blood_biomarkers = Biomarker.includes(:reference_ranges)
+    
+    if current_user.has_any_role?(:admin, :doctor)
+      @users = User.all
+      @selected_user = User.find_by(id: params[:user_id]) || current_user
+    else
+      @selected_user = current_user
+    end
+    
+    if @selected_user.health_record.nil?
+      @health_record = HealthRecord.create(user: @selected_user)
+    else
+      @health_record = @selected_user.health_record
+    end
+    
+    authorize @lab_test
+    render :new_blood
   end
 
   private

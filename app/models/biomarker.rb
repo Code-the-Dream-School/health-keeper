@@ -5,4 +5,6 @@ class Biomarker < ApplicationRecord
   accepts_nested_attributes_for :lab_tests, :reference_ranges
 
   validates :name, presence: true, uniqueness: true
+
+  scope :blood_markers, -> { where(category: 'blood') }
 end
