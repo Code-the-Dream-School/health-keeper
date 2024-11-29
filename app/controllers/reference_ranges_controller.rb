@@ -6,7 +6,18 @@ class ReferenceRangesController < ApplicationController
 
   # GET /reference_ranges or /reference_ranges.json
   def index
-    @reference_ranges = policy_scope(ReferenceRange.all)
+    # @reference_ranges = policy_scope(ReferenceRange.all)
+    @biomarker = Biomarker.find(params[:biomarker_id])
+    @reference_ranges = @biomarker.reference_ranges
+
+    render json: @reference_ranges.map { |range|
+      {
+        id: range.id,
+        unit: range.unit,
+        min_value: range.min_value,
+        max_value: range.max_value
+      }
+    }
   end
 
   # GET /reference_ranges/1 or /reference_ranges/1.json

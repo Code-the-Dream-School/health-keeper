@@ -2,7 +2,7 @@
 
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
-  before_action :build_lab_test, only: %i[create]
+  before_action :build_lab_test, only: %i[create create_blood_test]
 
   # GET /lab_tests or /lab_tests.json
   def index
@@ -78,6 +78,37 @@ class LabTestsController < ApplicationController
     end
   end
 
+  def new_blood_test
+    @lab_test = LabTest.new
+    @health_record = HealthRecord.new
+    @biomarkers = Biomarker.all
+    @users = User.all if current_user.full_access_roles_can?
+    authorize @lab_test
+  end
+
+  def create_blood_test
+    authorize @lab_test
+
+    ActiveRecord::Base.transaction do
+      @health_record = HealthRecord.create!(
+        user: current_user.full_access_roles_can? ? User.find(params[:user_id]) : current_user,
+        notes: params[:notes]
+      )
+
+      @lab_test = LabTest.new(blood_test_params)
+      @lab_test.recordable = @health_record
+      @lab_test.user = @health_record.user
+
+      if @lab_test.save
+        redirect_to @health_record, notice: t('.success')
+      else
+        render :new_blood_test, status: :unprocessable_entity
+      end
+    end
+  rescue ActiveRecord::RecordInvalid
+    render :new_blood_test, status: :unprocessable_entity
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -95,5 +126,15 @@ class LabTestsController < ApplicationController
       .require(:lab_test)
       .permit(:user_id, :biomarker_id, :value, :unit, :reference_range_id, :recordable_type, :recordable_id, :notes,
               :created_at, :updated_at)
+  end
+
+  def blood_test_params
+    params.require(:lab_test).permit(
+      :biomarker_id,
+      :value,
+      :unit,
+      :reference_range_id,
+      :notes
+    )
   end
 end

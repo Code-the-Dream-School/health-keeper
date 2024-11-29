@@ -1,0 +1,72 @@
+<div class="tw-container tw-mx-auto tw-p-4">
+    <h1 class="tw-text-2xl tw-font-bold tw-mb-4">New Blood Test</h1>
+
+    <%= form_with(model: @lab_test, url: create_blood_test_lab_tests_path, class: "tw-space-y-4") do |form| %>
+    <% if current_user.full_access_roles_can? %>
+    <div class="tw-mb-4">
+        <%= label_tag :user_id, "Select Patient", class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+        <%= select_tag :user_id,
+                    options_from_collection_for_select(User.all, :id, :email),
+                    class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300",
+                    prompt: "Select patient"
+                %>
+    </div>
+    <% end %>
+
+    <% if @lab_test.errors.any? %>
+    <div class="alert alert-danger">
+        <h2><%= pluralize(@lab_test.errors.count, "error") %> prohibited this test from being saved:</h2>
+        <ul>
+            <% @lab_test.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+            <% end %>
+        </ul>
+    </div>
+    <% end %>
+
+    <div class="tw-mb-4" data-controller="biomarker-select">
+        <%= form.label :biomarker_id, class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+        <%= form.collection_select :biomarker_id, 
+              @biomarkers,
+              :id,
+              :name,
+              { prompt: "Select biomarker" },
+              { class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300",
+                data: { 
+                  biomarker_select_target: "select",
+                  action: "change->biomarker-select#updateReferenceRange"
+                }
+              }
+            %>
+
+        <div id="reference_range_info" class="tw-mt-2 tw-p-4 tw-bg-gray-50 tw-rounded-md">
+            <p class="tw-text-sm tw-text-gray-600">
+                <strong>Reference Range:</strong>
+                <span data-biomarker-select-target="referenceRange">Select biomarker first</span>
+            </p>
+            <p class="tw-text-sm tw-text-gray-600">
+                <strong>Unit:</strong>
+                <span data-biomarker-select-target="unit">-</span>
+            </p>
+        </div>
+
+        <%= form.hidden_field :reference_range_id, data: { biomarker_select_target: "referenceRangeId" } %>
+        <%= form.hidden_field :unit, data: { biomarker_select_target: "unitField" } %>
+    </div>
+
+    <div class="tw-mb-4">
+        <%= form.label :value, class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+        <%= form.number_field :value, 
+              step: :any,
+              class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300" 
+          %>
+    </div>
+
+    <div class="tw-mb-4">
+        <%= label_tag :notes, nil, class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
+        <%= text_area_tag :notes, nil, class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300" %>
+    </div>
+
+    <%= form.submit "Create Blood Test", class: "tw-bg-blue-500 tw-hover:bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded" %>
+    <% end %>
+</div>

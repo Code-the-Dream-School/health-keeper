@@ -21,6 +21,16 @@ class LabTestPolicy < ApplicationPolicy
     user.full_access_roles_can? || record.user == user
   end
 
+  def new_blood_test?
+    true
+  end
+
+  def create_blood_test?
+    return true if user.has_role?(User::Roles::ADMIN) || user.has_role?(User::Roles::DOCTOR)
+
+    record.user_id == user.id
+  end
+
   class Scope < ApplicationPolicy::Scope
     def resolve
       if user.full_access_roles_can?
