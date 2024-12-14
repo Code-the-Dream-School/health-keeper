@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe LabTestsController, type: :controller do
+RSpec.describe LabTestsController do
   let(:user) { create(:user) }
   let(:biomarker) { create(:biomarker) }
   let(:reference_range) { create(:reference_range, biomarker: biomarker) }

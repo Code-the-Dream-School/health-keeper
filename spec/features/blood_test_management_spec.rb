@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe 'Blood Test Management', type: :feature do
+RSpec.describe 'Blood Test Management' do
   let(:user) { create(:user) }
   let!(:biomarker) { create(:biomarker, name: 'Glucose') }
   let!(:reference_range) do

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :reference_range do
-    association :biomarker
+    biomarker
     min_value { 70.0 }
     max_value { 99.0 }
     unit { 'mg/dL' }

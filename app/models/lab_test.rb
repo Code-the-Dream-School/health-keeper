@@ -9,7 +9,7 @@ class LabTest < ApplicationRecord
   validates :value, presence: true,
                     numericality: {
                       greater_than_or_equal_to: 0,
-                      message: lambda do |object, data|
+                      message: lambda do |_object, data|
                         if data[:value].to_s.match?(/\A[+-]?\d+(\.\d+)?\z/)
                           'must be a non-negative number'
                         else
@@ -18,8 +18,6 @@ class LabTest < ApplicationRecord
                       end
                     }
   validates :unit, presence: true
-  validates :biomarker, presence: true
-  validates :reference_range, presence: true
 
   # Helper method to check if value is within reference range
   def within_reference_range?

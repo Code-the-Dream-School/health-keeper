@@ -114,7 +114,7 @@ class LabTestsController < ApplicationController
 
         render :new_blood_test, status: :unprocessable_entity and return
       end
-    rescue StandardError => e
+    rescue StandardError
       @biomarkers = Biomarker.all
       flash.now[:alert] = 'An error occurred while saving the blood test.'
       render :new_blood_test, status: :unprocessable_entity and return

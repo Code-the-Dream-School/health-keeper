@@ -271,9 +271,9 @@ health_records.each do |health_record|
   end
 end
 
-puts 'Seeding completed successfully!'
+Rails.logger.debug 'Seeding completed successfully!'
 
-puts "Admin role user credentials: email: \"#{users[0].email}\" and password: \"password\""
-puts "Doctor role user credentials: email: \"#{users[1].email}\" and password: \"password\""
-puts "HealthCoach role user credentials: email: \"#{users[2].email}\" and password: \"password\""
-puts "User role user credentials: email: \"#{users[3].email}\" and password: \"password\""
+Rails.logger.debug { "Admin role user credentials: email: \"#{users[0].email}\" and password: \"password\"" }
+Rails.logger.debug { "Doctor role user credentials: email: \"#{users[1].email}\" and password: \"password\"" }
+Rails.logger.debug { "HealthCoach role user credentials: email: \"#{users[2].email}\" and password: \"password\"" }
+Rails.logger.debug { "User role user credentials: email: \"#{users[3].email}\" and password: \"password\"" }

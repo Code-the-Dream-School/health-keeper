@@ -11,6 +11,7 @@ require:
 
 AllCops:
   NewCops: enable
+  SuggestExtensions: false
 
 Rails/FilePath:
   Enabled: false
@@ -18,7 +19,50 @@ Rails/FilePath:
 Layout/LineLength:
   Max: 120
 Metrics/MethodLength:
-  Max: 20
+  Max: 30
+  Exclude:
+    - "app/controllers/**/*"
 
 Style/Documentation:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/AbcSize:
+  Max: 45
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 11
+
+Metrics/BlockLength:
+  Max: 30
+  Exclude:
+    - "spec/**/*"
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/TransactionExitStatement:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+Bundler/DuplicatedGem:
+  Enabled: true

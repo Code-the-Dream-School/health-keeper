@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :health_record do
-    association :user
+    user
     notes { 'Morning blood test' }
   end
 end
