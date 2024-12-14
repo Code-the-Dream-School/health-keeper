@@ -92,6 +92,8 @@ end
 
 group :test do
   gem 'capybara'
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'selenium-webdriver' # для JavaScript тестов
+  gem 'shoulda-matchers', '~> 5.0'
 end
