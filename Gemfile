@@ -89,3 +89,9 @@ group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
 end
+
+group :test do
+  gem 'capybara'
+  gem 'rspec-rails'
+  gem 'selenium-webdriver' # для JavaScript тестов
+end

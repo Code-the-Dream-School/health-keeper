@@ -1,6 +1,7 @@
 <div class="tw-container tw-mx-auto tw-p-4">
     <h1 class="tw-text-2xl tw-font-bold tw-mb-4">New Blood Test</h1>
 
+
     <%= form_with(model: @lab_test, url: create_blood_test_lab_tests_path, class: "tw-space-y-4") do |form| %>
     <% if current_user.full_access_roles_can? %>
     <div class="tw-mb-4">
@@ -56,10 +57,12 @@
 
     <div class="tw-mb-4">
         <%= form.label :value, class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
-        <%= form.number_field :value, 
-              step: :any,
-              class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300" 
-          %>
+        <div class="tw-flex tw-items-center">
+            <%= form.number_field :value, 
+                  step: :any,
+                  class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300" 
+              %>
+        </div>
     </div>
 
     <div class="tw-mb-4">

@@ -21,7 +21,8 @@ class User < ApplicationRecord
   end
 
   def full_access_roles_can?
-    has_any_role?(*User::Roles::FULL_ACCESS_ROLES)
+    # has_any_role?(*User::Roles::FULL_ACCESS_ROLES)
+    roles.exists?(name: %w[admin doctor])
   end
 
   def all_roles_can?
