@@ -31,10 +31,12 @@ export default class extends Controller {
       const ranges = await response.json()
       if (ranges.length > 0) {
         const range = ranges[0] // Take first range for now
-        this.referenceRangeTarget.textContent = `${range.min_value} - ${range.max_value}`
-        this.unitTarget.textContent = range.unit
+        const minValue = range.min_value ?? "-"
+        const maxValue = range.max_value ?? "-"
+        this.referenceRangeTarget.textContent = `${minValue} - ${maxValue}`
+        this.unitTarget.textContent = range.unit || "-"
         this.referenceRangeIdTarget.value = range.id
-        this.unitFieldTarget.value = range.unit
+        this.unitFieldTarget.value = range.unit || ""
       } else {
         this.resetDisplays()
       }

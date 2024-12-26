@@ -70,13 +70,6 @@ class BiomarkersController < ApplicationController
     end
   end
 
-  def reference_ranges
-    biomarker = Biomarker.find(params[:id])
-    reference_ranges = biomarker.reference_ranges
-
-    render json: reference_ranges
-  end
-
   private
 
   # Use callbacks to share common setup or constraints between actions.

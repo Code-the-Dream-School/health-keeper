@@ -2,8 +2,7 @@
 
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
-  before_action :set_biomarkers, only: %i[new_blood_test create_blood_test]
-  before_action :build_lab_test, only: %i[create create_blood_test]
+  before_action :set_biomarkers, only: %i[new create]
 
   # GET /lab_tests or /lab_tests.json
   def index
@@ -24,7 +23,7 @@ class LabTestsController < ApplicationController
   # GET /lab_tests/new
   def new
     @lab_test = LabTest.new
-    # authorize @lab_test
+    authorize @lab_test
   end
 
   # GET /lab_tests/1/edit
@@ -34,17 +33,25 @@ class LabTestsController < ApplicationController
 
   # POST /lab_tests or /lab_tests.json
   def create
-    # authorize @lab_test
+    @lab_test = current_user.lab_tests.build(lab_test_params)
+    authorize @lab_test
 
-    respond_to do |format|
-      if @lab_test.save
-        format.html { redirect_to @lab_test, notice: t('.success') }
-        format.json { render :show, status: :created, location: @lab_test }
+    ActiveRecord::Base.transaction do
+      @health_record = HealthRecord.new(
+        user: determine_user,
+        notes: lab_test_params[:notes]
+      )
+
+      @lab_test.recordable = @health_record
+
+      if @health_record.save
+        handle_success_response
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @lab_test.errors, status: :unprocessable_entity }
+        handle_error_response
       end
     end
+  rescue StandardError
+    handle_error_response('An error occurred while saving the test.')
   end
 
   # PATCH/PUT /lab_tests/1 or /lab_tests/1.json
@@ -79,51 +86,29 @@ class LabTestsController < ApplicationController
     end
   end
 
-  def new_blood_test
-    @lab_test = LabTest.new
-    @biomarkers = Biomarker.all
-    authorize @lab_test
-  end
-
-  def create_blood_test
-    authorize @lab_test
-
-    ActiveRecord::Base.transaction do
-      @health_record = HealthRecord.new(
-        user: current_user.full_access_roles_can? ? User.find(params[:user_id]) : current_user,
-        notes: lab_test_params[:notes]
-      )
-
-      @lab_test.assign_attributes(blood_test_params)
-      @lab_test.recordable = @health_record
-      @lab_test.user = @health_record.user
-      @lab_test.notes = lab_test_params[:notes]
-
-      if @lab_test.valid? && @health_record.valid?
-        @health_record.save!
-        @lab_test.save!
-        flash[:notice] = 'Blood test was successfully created.'
-        redirect_to @health_record and return
-      else
-        @biomarkers = Biomarker.all
-
-        if @lab_test.biomarker_id.present?
-          @selected_biomarker = Biomarker.find(@lab_test.biomarker_id)
-          @reference_ranges = @selected_biomarker.reference_ranges
-        end
-
-        render :new_blood_test, status: :unprocessable_entity and return
-      end
-    rescue StandardError
-      @biomarkers = Biomarker.all
-      flash.now[:alert] = 'An error occurred while saving the blood test.'
-      render :new_blood_test, status: :unprocessable_entity and return
-    ensure
-      raise ActiveRecord::Rollback unless @lab_test.persisted?
-    end
-  end
-
   private
+
+  def handle_success_response
+    flash[:notice] = t('.success')
+    redirect_to(@health_record)
+  end
+
+  def handle_error_response(message = nil)
+    flash.now[:alert] = message if message
+    load_error_dependencies
+    render :new, status: :unprocessable_entity
+  end
+
+  def determine_redirect_path
+    @health_record || @lab_test
+  end
+
+  def load_error_dependencies
+    return unless @lab_test.biomarker_id.present?
+
+    @selected_biomarker = Biomarker.find(@lab_test.biomarker_id)
+    @reference_ranges = @selected_biomarker.reference_ranges
+  end
 
   def set_biomarkers
     @biomarkers = Biomarker.all
@@ -133,19 +118,11 @@ class LabTestsController < ApplicationController
     @lab_test = LabTest.find(params[:id])
   end
 
-  def build_lab_test
-    @lab_test = current_user.lab_tests.build
+  def save_records
+    @health_record.save && @lab_test.save
   end
 
-  # Only allow a list of trusted parameters through.
   def lab_test_params
-    params
-      .require(:lab_test)
-      .permit(:user_id, :biomarker_id, :value, :unit, :reference_range_id, :recordable_type, :recordable_id, :notes,
-              :created_at, :updated_at)
-  end
-
-  def blood_test_params
     params.require(:lab_test).permit(
       :biomarker_id,
       :value,
@@ -153,5 +130,13 @@ class LabTestsController < ApplicationController
       :reference_range_id,
       :notes
     )
+  end
+
+  def determine_user
+    if current_user.full_access_roles_can? && params[:user_id].present?
+      User.find(params[:user_id])
+    else
+      current_user
+    end
   end
 end

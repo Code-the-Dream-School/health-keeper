@@ -3,7 +3,7 @@
 class LabTest < ApplicationRecord
   belongs_to :user
   belongs_to :biomarker
-  belongs_to :recordable, polymorphic: true
+  belongs_to :recordable, polymorphic: true, touch: true
   belongs_to :reference_range
 
   validates :value, presence: true,
