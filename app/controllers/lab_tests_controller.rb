@@ -104,7 +104,7 @@ class LabTestsController < ApplicationController
   end
 
   def load_error_dependencies
-    return unless @lab_test.biomarker_id.present?
+    return if @lab_test.biomarker_id.blank?
 
     @selected_biomarker = Biomarker.find(@lab_test.biomarker_id)
     @reference_ranges = @selected_biomarker.reference_ranges
