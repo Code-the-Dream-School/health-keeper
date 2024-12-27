@@ -24,6 +24,8 @@ class LabTestsController < ApplicationController
   def new
     @lab_test = LabTest.new
     authorize @lab_test
+    set_biomarkers
+    @users = User.all if current_user.full_access_roles_can?
   end
 
   # GET /lab_tests/1/edit
@@ -33,18 +35,17 @@ class LabTestsController < ApplicationController
 
   # POST /lab_tests or /lab_tests.json
   def create
-    @lab_test = current_user.lab_tests.build(lab_test_params)
+    build_lab_test
     authorize @lab_test
 
     ActiveRecord::Base.transaction do
-      @health_record = HealthRecord.new(
+      @health_record = @lab_test.build_recordable(
+        type: 'HealthRecord',
         user: determine_user,
         notes: lab_test_params[:notes]
       )
 
-      @lab_test.recordable = @health_record
-
-      if @health_record.save
+      if save_health_record_with_lab_test
         handle_success_response
       else
         handle_error_response
@@ -106,7 +107,7 @@ class LabTestsController < ApplicationController
   def load_error_dependencies
     return if @lab_test.biomarker_id.blank?
 
-    @selected_biomarker = Biomarker.find(@lab_test.biomarker_id)
+    @selected_biomarker = @biomarkers.find(@lab_test.biomarker_id)
     @reference_ranges = @selected_biomarker.reference_ranges
   end
 
@@ -118,7 +119,7 @@ class LabTestsController < ApplicationController
     @lab_test = LabTest.find(params[:id])
   end
 
-  def save_records
+  def save_health_record_with_lab_test
     @health_record.save && @lab_test.save
   end
 
@@ -138,5 +139,9 @@ class LabTestsController < ApplicationController
     else
       current_user
     end
+  end
+
+  def build_lab_test
+    @lab_test = current_user.lab_tests.build(lab_test_params)
   end
 end

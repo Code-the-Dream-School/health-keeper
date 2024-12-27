@@ -31,8 +31,8 @@ export default class extends Controller {
       const ranges = await response.json()
       if (ranges.length > 0) {
         const range = ranges[0] // Take first range for now
-        const minValue = range.min_value ?? "-"
-        const maxValue = range.max_value ?? "-"
+        const minValue = range.min_value ?? "?"
+        const maxValue = range.max_value ?? "?"
         this.referenceRangeTarget.textContent = `${minValue} - ${maxValue}`
         this.unitTarget.textContent = range.unit || "-"
         this.referenceRangeIdTarget.value = range.id

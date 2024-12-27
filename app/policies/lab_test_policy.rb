@@ -9,10 +9,6 @@ class LabTestPolicy < ApplicationPolicy
     user.full_access_roles_can? || record.user == user
   end
 
-  def new?
-    create?
-  end
-
   def create?
     user.all_roles_can?
   end
