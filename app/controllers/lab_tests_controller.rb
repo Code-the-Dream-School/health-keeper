@@ -30,7 +30,7 @@ class LabTestsController < ApplicationController
 
   # GET /lab_tests/1/edit
   def edit
-    authorize @lab_test
+    # authorize @lab_test
   end
 
   # POST /lab_tests or /lab_tests.json

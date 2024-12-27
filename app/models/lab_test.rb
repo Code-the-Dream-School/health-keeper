@@ -9,7 +9,8 @@ class LabTest < ApplicationRecord
   validates :unit, presence: true
   validates :value, presence: true,
                     numericality: {
-                      in: 0..Float::INFINITY
+                      greater_than_or_equal_to: 0,
+                      less_than_or_equal_to: 10_000
                     }
 
   module Status
