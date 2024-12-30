@@ -1,0 +1,20 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle <%= 'active' if controller_name == 'health_records' || controller_name == 'pdfs' %>" 
+     href="#" 
+     role="button" 
+     data-bs-toggle="dropdown" 
+     aria-expanded="false">
+    Health Records
+  </a>
+  <ul class="dropdown-menu">
+    <li>
+      <%= link_to "View All Records", health_records_path, 
+          class: "dropdown-item #{controller_name == 'health_records' ? 'active' : ''}" %>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <%= link_to "View PDFs", pdfs_path, 
+          class: "dropdown-item #{controller_name == 'pdfs' ? 'active' : ''}" %>
+    </li>
+  </ul>
+</li> 

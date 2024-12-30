@@ -83,6 +83,12 @@ group :development do
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rspec_rails', require: false
 
+  # PDF parsing
+  gem 'pdf-reader'
+
+  # Active Storage Validations
+  gem 'active_storage_validations'
+
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 

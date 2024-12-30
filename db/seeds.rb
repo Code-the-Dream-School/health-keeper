@@ -231,8 +231,8 @@ health_records.each do |health_record|
                Faker::Number.decimal(l_digits: 2, r_digits: 2)
              else
                Faker::Number.between(
-                 from: min_max_map[biomarker.name][0],
-                 to: min_max_map[biomarker.name][1]
+                 from: min_max_map.fetch(biomarker.name, [0, 100])[0],
+                 to: min_max_map.fetch(biomarker.name, [0, 100])[1]
                )
              end,
       unit: reference_range.unit,

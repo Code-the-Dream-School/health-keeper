@@ -66,3 +66,6 @@ en:
   application:
     user_not_authorized:
       failure: 'You are not authorized to perform this action.'
+
+  pdfs:
+    supported_labs: "We support only this list of PDF's templates and others won't be properly parsed: Quest Diagnostics, LabCorp, Mayo Clinic"

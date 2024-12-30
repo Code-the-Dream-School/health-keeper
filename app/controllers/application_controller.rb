@@ -37,4 +37,8 @@ class ApplicationController < ActionController::Base
 
     render file: "#{::Rails.root}/public/404.html", status: :not_found
   end
+
+  def pdf_dropdown_item
+    render partial: 'shared/pdf_dropdown_item', layout: false
+  end
 end
