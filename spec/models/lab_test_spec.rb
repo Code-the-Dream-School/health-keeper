@@ -20,7 +20,7 @@ RSpec.describe LabTest do
       it 'is invalid with a negative value' do
         lab_test.value = -1
         expect(lab_test).not_to be_valid
-        expect(lab_test.errors[:value]).to include('must be a non-negative number')
+        expect(lab_test.errors[:value]).to include('value must be greater non negative and as numeric')
       end
 
       it 'is valid with zero' do
@@ -31,7 +31,7 @@ RSpec.describe LabTest do
       it 'is invalid with non-numeric value' do
         lab_test.value = 'abc'
         expect(lab_test).not_to be_valid
-        expect(lab_test.errors[:value]).to include('is not a number')
+        expect(lab_test.errors[:value]).to include('value must be greater non negative and as numeric')
       end
 
       it 'is valid with a positive number' do
