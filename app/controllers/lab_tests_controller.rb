@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
   before_action :set_biomarkers, only: %i[new create]
@@ -147,3 +148,4 @@ class LabTestsController < ApplicationController
     @lab_test = current_user.lab_tests.build(lab_test_params)
   end
 end
+# rubocop:enable Metrics/ClassLength

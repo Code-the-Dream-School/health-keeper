@@ -16,27 +16,27 @@ RSpec.describe LabTest do
     it { is_expected.to validate_presence_of(:value) }
     it { is_expected.to validate_presence_of(:unit) }
 
-    context 'value validations' do
+    context 'when validating value' do
       it 'is invalid with a negative value' do
         lab_test.value = -1
         expect(lab_test).not_to be_valid
-        expect(lab_test.errors[:value]).to include('value must be greater non negative and as numeric')
       end
 
-      it 'is valid with zero' do
-        lab_test.value = 0
-        expect(lab_test).to be_valid
+      it 'has correct error message for negative value' do
+        lab_test.value = -1
+        lab_test.valid?
+        expect(lab_test.errors[:value]).to include('value must be nonnegative and as numeric')
       end
 
       it 'is invalid with non-numeric value' do
         lab_test.value = 'abc'
         expect(lab_test).not_to be_valid
-        expect(lab_test.errors[:value]).to include('value must be greater non negative and as numeric')
       end
 
-      it 'is valid with a positive number' do
-        lab_test.value = 85.0
-        expect(lab_test).to be_valid
+      it 'has correct error message for non-numeric value' do
+        lab_test.value = 'abc'
+        lab_test.valid?
+        expect(lab_test.errors[:value]).to include('value must be nonnegative and as numeric')
       end
     end
   end

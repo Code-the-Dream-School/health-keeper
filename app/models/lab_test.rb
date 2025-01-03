@@ -10,8 +10,7 @@ class LabTest < ApplicationRecord
   validates :value, presence: true,
                     numericality: {
                       greater_than_or_equal_to: 0,
-                      less_than_or_equal_to: 10_000,
-                      message: 'value must be greater non negative and as numeric'
+                      message: :must_be_nonnegative_and_numeric
                     }
 
   class Status
