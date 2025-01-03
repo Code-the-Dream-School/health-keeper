@@ -21,7 +21,6 @@
     <% end %>
 
     <%= form_with(model: @lab_test, local: true, class: "tw-space-y-4") do |form| %>
-    <%= form.hidden_field :test_type, value: params[:test_type] %>
 
     <% if current_user.full_access_roles_can? %>
     <div class="tw-mb-4">

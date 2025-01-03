@@ -13,7 +13,7 @@ class LabTest < ApplicationRecord
                       less_than_or_equal_to: 10_000
                     }
 
-  module Status
+  class Status
     NORMAL = :normal
     HIGH = :high
     LOW = :low

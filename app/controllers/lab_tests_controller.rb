@@ -39,11 +39,12 @@ class LabTestsController < ApplicationController
     authorize @lab_test
 
     ActiveRecord::Base.transaction do
-      @health_record = @lab_test.build_recordable(
-        type: 'HealthRecord',
+      @health_record = HealthRecord.new(
         user: determine_user,
         notes: lab_test_params[:notes]
       )
+
+      @lab_test.recordable = @health_record
 
       if save_health_record_with_lab_test
         handle_success_response
@@ -96,6 +97,7 @@ class LabTestsController < ApplicationController
 
   def handle_error_response(message = nil)
     flash.now[:alert] = message if message
+    @users = User.all if current_user.full_access_roles_can?
     load_error_dependencies
     render :new, status: :unprocessable_entity
   end
