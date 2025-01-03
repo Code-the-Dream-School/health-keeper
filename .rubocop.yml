@@ -11,7 +11,6 @@ require:
 
 AllCops:
   NewCops: enable
-  SuggestExtensions: false
 
 Rails/FilePath:
   Enabled: false
@@ -21,9 +20,7 @@ Rails/Output:
 Layout/LineLength:
   Max: 120
 Metrics/MethodLength:
-  Max: 30
-  Exclude:
-    - "app/controllers/**/*"
+  Max: 20
 
 Style/Documentation:
   Enabled: false
