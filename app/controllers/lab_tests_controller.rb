@@ -5,7 +5,7 @@ class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
   before_action :build_lab_test, only: %i[create]
   before_action :set_filter_by_user_id, only: %i[index]
-  before_action :set_biomarkers, only: %i[index new edit]
+  before_action :set_biomarkers, only: %i[index new edit create]
   # GET /lab_tests or /lab_tests.json
   def index
     authorize LabTest
