@@ -40,7 +40,7 @@ class LabTestsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @health_record = HealthRecord.new(
-        user: get_user,
+        user: determine_user,
         notes: lab_test_params[:notes]
       )
 
@@ -135,7 +135,7 @@ class LabTestsController < ApplicationController
     )
   end
 
-  def get_user
+  def determine_user
     if current_user.full_access_roles_can? && params[:user_id].present?
       User.find(params[:user_id])
     else
