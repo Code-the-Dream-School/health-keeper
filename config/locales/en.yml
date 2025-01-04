@@ -81,11 +81,3 @@ en:
       remove_role_failure: "Failed to remove role: %{role}"
       add_role_failure: "Failed to add role: %{role}"
       unexpected_error: "Unexpected error while synchronizing roles"
-
-  activerecord:
-    errors:
-      models:
-        lab_test:
-          attributes:
-            value:
-              must_be_nonnegative_and_numeric: "value must be nonnegative and as numeric"
