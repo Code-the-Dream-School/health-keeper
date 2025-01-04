@@ -142,10 +142,6 @@ class LabTestsController < ApplicationController
     @health_record.save && @lab_test.save
   end
 
-  def lab_test_params
-    params.require(:lab_test).permit(:biomarker_id, :value, :notes, :user_id)
-  end
-
   def determine_user
     if current_user.full_access_roles_can? && params[:user_id].present?
       User.find(params[:user_id])
@@ -179,3 +175,4 @@ class LabTestsController < ApplicationController
     params.permit(:user_id)
   end
 end
+# rubocop:enable Metrics/ClassLength
