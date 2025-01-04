@@ -83,6 +83,7 @@ group :development do
   gem 'rubocop', require: false
   gem 'rubocop-factory_bot', require: false
   # Performance optimization analysis.
+  gem 'rubocop-capybara', require: false
   gem 'rubocop-performance', '~> 1.12.0', require: false
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false

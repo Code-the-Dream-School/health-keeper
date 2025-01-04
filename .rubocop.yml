@@ -8,6 +8,7 @@ require:
   - rubocop-rspec
   - rubocop-rspec_rails
   - rubocop-factory_bot
+  - rubocop-capybara
 
 AllCops:
   NewCops: enable
