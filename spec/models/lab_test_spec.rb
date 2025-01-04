@@ -25,7 +25,7 @@ RSpec.describe LabTest do
       it 'has correct error message for negative value' do
         lab_test.value = -1
         lab_test.valid?
-        expect(lab_test.errors[:value]).to include('value must be nonnegative and as numeric')
+        expect(lab_test.errors[:value]).to include('The value must be both nonnegative and numeric')
       end
 
       it 'is invalid with non-numeric value' do
@@ -36,7 +36,7 @@ RSpec.describe LabTest do
       it 'has correct error message for non-numeric value' do
         lab_test.value = 'abc'
         lab_test.valid?
-        expect(lab_test.errors[:value]).to include('value must be nonnegative and as numeric')
+        expect(lab_test.errors[:value]).to include('The value must be both nonnegative and numeric')
       end
     end
   end
