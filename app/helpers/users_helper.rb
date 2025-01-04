@@ -29,6 +29,9 @@ module UsersHelper
     user.assigned_users_ids
   end
 
+  # @param [Object] user The user to check for assigned users
+  # @param [Object] current_user The current logged in user to add to a list of assigned users
+
   # @return [[string, int]] Pairs of user full name and id ready to use in select field
   # Adds current user pair if it was not selected
   # Or empty array if there are no assigned users
