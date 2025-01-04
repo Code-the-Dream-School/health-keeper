@@ -52,7 +52,6 @@ class LabTestsController < ApplicationController
 
   # POST /lab_tests or /lab_tests.json
   def create
-    @lab_test = LabTest.new(lab_test_params)
     authorize @lab_test
 
     ActiveRecord::Base.transaction do
