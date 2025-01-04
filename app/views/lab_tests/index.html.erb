@@ -22,7 +22,12 @@
         </div>
         <% end %>
 
-        <%= link_to "New lab test", new_lab_test_path, class: "btn btn-primary" %>
+        <%= button_to new_lab_test_path, 
+            data: { turbo_frame: "_top" },  # This will load in the full page
+            method: :get,
+            class: "btn btn-primary" do %>
+        New Lab Test
+        <% end %>
     </header>
 
     <%= render "index_table", recordables: @recordables, biomarkers: @biomarkers %>

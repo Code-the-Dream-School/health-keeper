@@ -36,7 +36,13 @@ class LabTestsController < ApplicationController
   def new
     @lab_test = LabTest.new
     authorize @lab_test
+    @biomarkers = Biomarker.all
     @users = User.all if current_user.full_access_roles_can?
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream { render turbo_stream: turbo_stream.replace('lab_test_form', partial: 'form') }
+    end
   end
 
   # GET /lab_tests/1/edit
@@ -46,7 +52,7 @@ class LabTestsController < ApplicationController
 
   # POST /lab_tests or /lab_tests.json
   def create
-    build_lab_test
+    @lab_test = LabTest.new(lab_test_params)
     authorize @lab_test
 
     ActiveRecord::Base.transaction do
@@ -137,13 +143,7 @@ class LabTestsController < ApplicationController
   end
 
   def lab_test_params
-    params.require(:lab_test).permit(
-      :biomarker_id,
-      :value,
-      :unit,
-      :reference_range_id,
-      :notes
-    )
+    params.require(:lab_test).permit(:biomarker_id, :value, :notes, :user_id)
   end
 
   def determine_user

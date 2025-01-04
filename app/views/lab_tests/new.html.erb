@@ -25,12 +25,16 @@
     <% if current_user.full_access_roles_can? %>
     <div class="tw-mb-4">
         <%= label_tag :user_id, "Select Patient", class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
-        <%= select_tag :user_id,
-                      options_from_collection_for_select(@users, :id, :email, params[:user_id]),
-                      class: "tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300",
-                      prompt: "Select patient"
-                  %>
+        <%= form.select :user_id,
+            options_for_select(
+              assigned_users_list_for_select(current_user, @lab_test.user || current_user)
+            ),
+            { include_blank: false },
+            class: "border-blue-500 rounded"
+        %>
     </div>
+    <% else %>
+    <%= form.hidden_field :user_id, value: current_user.id %>
     <% end %>
 
     <div class="tw-mb-4" data-controller="biomarker-select">
