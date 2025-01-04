@@ -39,13 +39,5 @@
 !/app/assets/builds/.keep
 
 .DS_Store
-.vscode/
-!.vscode/settings.json
-### VisualStudioCode ###
-.vscode/*      
-# Maybe .vscode/**/* instead - see comments
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode/*
 # Ignore test files
