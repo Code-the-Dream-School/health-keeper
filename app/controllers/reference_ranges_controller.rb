@@ -6,6 +6,7 @@ class ReferenceRangesController < ApplicationController
 
   # GET /reference_ranges or /reference_ranges.json
   def index
+    authorize ReferenceRange
     @biomarker = Biomarker.find(params[:biomarker_id])
     @reference_ranges = @biomarker.reference_ranges
 
