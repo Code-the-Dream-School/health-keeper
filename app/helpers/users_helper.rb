@@ -54,6 +54,6 @@ module UsersHelper
   end
 
   def assigned_users?
-    current_user.full_access_roles_can? && !current_user.assigned_users.empty?
+    (current_user&.full_access_roles_can? && !current_user.assigned_users.empty?) || false
   end
 end
