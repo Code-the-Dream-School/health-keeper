@@ -33,7 +33,7 @@ module UsersHelper
   # @param [Object] current_user The current logged in user to add to a list of assigned users
 
   # @return [[string, int]] Pairs of user full name and id ready to use in select field
-  # Adds current user pair if it was not selected
+  # Adds current user pair if it was not selected - TODO: rethought/rewrite this to make behavior more consistent
   # Or empty array if there are no assigned users
   def assigned_users_list_for_select(user, current_user)
     return [current_user.full_name] if user.assigned_users.empty?
