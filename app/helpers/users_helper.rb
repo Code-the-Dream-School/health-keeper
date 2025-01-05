@@ -36,7 +36,7 @@ module UsersHelper
   # Adds current user pair if it was not selected - TODO: rethought/rewrite this to make behavior more consistent
   # Or empty array if there are no assigned users
   def assigned_users_list_for_select(user, current_user)
-    return [current_user.full_name] if user.assigned_users.empty?
+    return [] if user.assigned_users.empty?
 
     current_user_included = false
     assigned_users = user.assigned_users.map do |assigned_user|

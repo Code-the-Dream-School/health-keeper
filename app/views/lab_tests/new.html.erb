@@ -22,12 +22,12 @@
 
     <%= form_with(model: @lab_test, local: true, class: "tw-space-y-4") do |form| %>
 
-    <% if current_user.full_access_roles_can? %>
+    <% if current_user.full_access_roles_can? && !current_user.assigned_users.empty? %>
     <div class="tw-mb-4">
         <%= label_tag :user_id, "Select Patient", class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
         <%= form.select :user_id,
             options_for_select(
-              assigned_users_list_for_select(current_user, @lab_test.user || current_user)
+              assigned_users_list_for_select(current_user, current_user)
             ),
             { include_blank: false },
             class: "border-blue-500 rounded"

@@ -151,9 +151,9 @@ RSpec.describe UsersHelper do
     context 'when the user has no assigned users' do
       let(:user_with_no_assigned_users) { instance_double(User, assigned_users: []) }
 
-      it 'returns an array with the single current user' do
+      it 'returns an empty array' do
         result = helper.assigned_users_list_for_select(user_with_no_assigned_users, current_user)
-        expect(result).to eq([current_user.full_name])
+        expect(result).to eq([])
       end
     end
   end
