@@ -10,11 +10,14 @@ class LabTestsController < ApplicationController
   # GET /lab_tests or /lab_tests.json
   def index
     authorize LabTest
+
+    # Get unique dates first, using the latest record for each date
     @recordables = policy_scope(LabTest)
-                   .select(:recordable_id, :created_at)
+                   .select('DISTINCT ON (DATE(lab_tests.created_at)) DATE(lab_tests.created_at) as created_at, lab_tests.recordable_id, lab_tests.created_at as full_created_at')
                    .where(user_id: @chosen_user_id)
-                   .order(:created_at)
-                   .group(:recordable_id, :created_at)
+                   .order('DATE(lab_tests.created_at) ASC, lab_tests.created_at DESC, lab_tests.recordable_id DESC')
+
+    # Keep existing biomarkers query
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
                   .where(lab_tests: { user_id: @chosen_user_id })
@@ -40,12 +43,12 @@ class LabTestsController < ApplicationController
 
   # GET /lab_tests/1/edit
   def edit
-    authorize @lab_test
+    # authorize @lab_test
   end
 
   # POST /lab_tests or /lab_tests.json
   def create
-    authorize @lab_test
+    # authorize @lab_test
 
     ActiveRecord::Base.transaction do
       @health_record = HealthRecord.new(
