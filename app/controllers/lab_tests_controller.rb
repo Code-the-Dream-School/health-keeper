@@ -114,18 +114,7 @@ class LabTestsController < ApplicationController
   def handle_error_response(message = nil)
     flash.now[:alert] = message if message
     @users = User.all if current_user.full_access_roles_can?
-    load_error_dependencies
     render :new, status: :unprocessable_entity
-  end
-
-  def determine_redirect_path
-    @health_record || @lab_test
-  end
-
-  def load_error_dependencies
-    return if @lab_test.biomarker_id.blank?
-
-    @selected_biomarker = @biomarkers.find(@lab_test.biomarker_id)
   end
 
   def set_biomarkers
