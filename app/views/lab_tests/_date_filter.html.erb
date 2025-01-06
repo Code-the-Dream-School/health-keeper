@@ -1,0 +1,20 @@
+<div class="tw-mb-6 tw-flex tw-justify-between tw-items-center">
+    <%= form_with(url: lab_tests_path, method: :get, class: "tw-inline-flex tw-items-center") do |f| %>
+    <div class="tw-inline-flex tw-items-center">
+        <span class="tw-mr-3 tw-text-sm tw-font-medium"><%= t('.from') %></span>
+        <%= f.date_field :start_date, 
+          value: params[:start_date], 
+          class: "tw-rounded-md tw-border tw-border-gray-300 tw-py-2 tw-px-3 tw-mr-6",
+          placeholder: "mm/dd/yyyy" %>
+
+        <span class="tw-mr-3 tw-text-sm tw-font-medium"><%= t('.to') %></span>
+        <%= f.date_field :end_date, 
+          value: params[:end_date], 
+          class: "tw-rounded-md tw-border tw-border-gray-300 tw-py-2 tw-px-3 tw-mr-6",
+          placeholder: "mm/dd/yyyy" %>
+
+        <%= f.submit t('.filter'), 
+          class: "tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600" %>
+    </div>
+    <% end %>
+</div>

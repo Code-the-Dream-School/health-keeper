@@ -1,13 +1,15 @@
 <section>
-  <header class="tw-my-2 tw-flex tw-flex-center tw-justify-between tw-items-center">
-    <h1 class="tw-text-lg">Lab Tests</h1>
-    <%= link_to "New Lab Test",
+    <header class="tw-my-2 tw-flex tw-flex-center tw-justify-between tw-items-center">
+        <h1 class="tw-text-lg">Lab Tests</h1>
+        <%= link_to "New Lab Test",
                 new_lab_test_path,
                 method: :get,
                 class: "btn btn-primary",
                 data: { turbo_frame: "_top" }
     %>
-  </header>
-
-  <%= render "index_table", recordables: @recordables, biomarkers: @biomarkers %>
+    </header>
+    <div class="tw-container tw-mx-auto">
+        <%= render 'date_filter' %>
+    </div>
+    <%= render "index_table", recordables: @recordables, biomarkers: @biomarkers %>
 </section>

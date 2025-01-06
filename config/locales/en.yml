@@ -62,6 +62,10 @@ en:
       success: "Lab test was successfully updated."
     destroy:
       success: "Lab test was successfully removed."
+    date_filter:
+      from: "From"
+      to: "To"
+      filter: "Filter"
   admin:
     users:
       update:

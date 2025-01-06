@@ -15,6 +15,7 @@ class LabTestsController < ApplicationController
     @recordables = policy_scope(LabTest)
                    .select('DISTINCT ON (DATE(lab_tests.created_at)) DATE(lab_tests.created_at) as created_at, lab_tests.recordable_id, lab_tests.created_at as full_created_at')
                    .where(user_id: @chosen_user_id)
+                   .where(date_range_condition)
                    .order('DATE(lab_tests.created_at) ASC, lab_tests.created_at DESC, lab_tests.recordable_id DESC')
 
     # Keep existing biomarkers query
@@ -147,6 +148,25 @@ class LabTestsController < ApplicationController
 
   def filter_params
     params.permit(:user_id)
+  end
+
+  def date_range_condition
+    return nil unless params[:start_date].present? || params[:end_date].present?
+
+    conditions = []
+    values = {}
+
+    if params[:start_date].present?
+      conditions << 'DATE(lab_tests.created_at) >= :start_date'
+      values[:start_date] = Date.parse(params[:start_date])
+    end
+
+    if params[:end_date].present?
+      conditions << 'DATE(lab_tests.created_at) <= :end_date'
+      values[:end_date] = Date.parse(params[:end_date])
+    end
+
+    [conditions.join(' AND '), values]
   end
 end
 # rubocop:enable Metrics/ClassLength
