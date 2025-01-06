@@ -130,8 +130,8 @@ class LabTestsController < ApplicationController
   end
 
   def set_user
-    if current_user.full_access_roles_can? && params[:user_id].present?
-      User.find(params[:user_id])
+    if current_user.full_access_roles_can?
+      User.find(lab_test_params[:user_id])
     else
       current_user
     end
