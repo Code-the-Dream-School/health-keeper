@@ -89,9 +89,7 @@
                     class: "tw-mt-1 tw-block tw-w-full tw-rounded-md #{@lab_test.errors[:value].present? ? 'tw-border-red-500' : 'tw-border-gray-300'}" 
                 %>
         </div>
-        <% if @lab_test.errors[:value].any? %>
-        <p class="tw-text-red-500 tw-text-sm tw-mt-1"><%= @lab_test.errors[:value].join(', ') %></p>
-        <% end %>
+
     </div>
 
     <div class="tw-mb-4">
