@@ -22,7 +22,7 @@
 
     <%= form_with(model: @lab_test, local: true, class: "tw-space-y-4") do |form| %>
 
-    <% if current_user.full_access_roles_can? && !current_user.assigned_users.empty? %>
+    <% if assigned_users? %>
     <div class="tw-mb-4">
         <%= label_tag :user_id, "Select Patient", class: "tw-block tw-text-sm tw-font-medium tw-text-gray-700" %>
         <%= form.select :user_id,
