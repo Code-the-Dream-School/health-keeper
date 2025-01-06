@@ -93,4 +93,4 @@ en:
         lab_test:
           attributes:
             value:
-              must_be_nonnegative_and_numeric: "The value must be both nonnegative and numeric"
+              must_be_nonnegative_and_numeric: "must be both nonnegative and numeric"
