@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_10_001556) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_05_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -90,6 +90,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_10_001556) do
   create_table "pdfs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "scan_method"
+    t.string "status", default: "pending"
+    t.jsonb "processed_data", default: {}
+    t.text "notes"
+    t.bigint "health_record_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["health_record_id"], name: "index_pdfs_on_health_record_id"
+    t.index ["processed_data"], name: "index_pdfs_on_processed_data", using: :gin
+    t.index ["scan_method"], name: "index_pdfs_on_scan_method"
+    t.index ["status"], name: "index_pdfs_on_status"
+    t.index ["user_id"], name: "index_pdfs_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -150,5 +161,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_10_001556) do
   add_foreign_key "lab_tests", "reference_ranges"
   add_foreign_key "lab_tests", "users"
   add_foreign_key "measurements", "users"
+  add_foreign_key "pdfs", "health_records"
+  add_foreign_key "pdfs", "users"
   add_foreign_key "reference_ranges", "biomarkers"
 end

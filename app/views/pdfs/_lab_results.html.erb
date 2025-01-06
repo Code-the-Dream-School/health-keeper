@@ -1,25 +1,39 @@
-<div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
-  <div class="px-4 py-5 sm:px-6">
-    <h3 class="text-lg leading-6 font-medium text-gray-900">Lab Results</h3>
-  </div>
-  <div class="border-t border-gray-200">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <% data.each do |result| %>
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= result[:name] %></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= result[:value] %></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= result[:unit] %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+<div class="lab-results">
+  <% data.each do |category, tests| %>
+    <div class="category-section mb-4">
+      <h3 class="text-lg font-semibold mb-2"><%= category %></h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Test</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Result</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Flag</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Unit</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Reference Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% tests.each do |test| %>
+              <tr class="border-t border-gray-200 hover:bg-gray-50">
+                <td class="px-4 py-2 text-sm"><%= test[:name] %></td>
+                <td class="px-4 py-2 text-sm">
+                  <span class="<%= test[:flag].present? ? 'text-red-600 font-semibold' : '' %>">
+                    <%= test[:value] %>
+                  </span>
+                </td>
+                <td class="px-4 py-2 text-sm text-red-600"><%= test[:flag] %></td>
+                <td class="px-4 py-2 text-sm text-gray-600"><%= test[:unit] %></td>
+                <td class="px-4 py-2 text-sm text-gray-600">
+                  <% if test[:reference_range][:min] && test[:reference_range][:max] %>
+                    <%= test[:reference_range][:min] %> - <%= test[:reference_range][:max] %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
 </div> 
