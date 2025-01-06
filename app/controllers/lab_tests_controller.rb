@@ -13,7 +13,12 @@ class LabTestsController < ApplicationController
 
     # Get unique dates first, using the latest record for each date
     @recordables = policy_scope(LabTest)
-                   .select('DISTINCT ON (DATE(lab_tests.created_at)) DATE(lab_tests.created_at) as created_at, lab_tests.recordable_id, lab_tests.created_at as full_created_at')
+                   .select(<<~SQL.squish)
+                     DISTINCT ON (DATE(lab_tests.created_at))#{' '}
+                     DATE(lab_tests.created_at) as created_at,#{' '}
+                     lab_tests.recordable_id,#{' '}
+                     lab_tests.created_at as full_created_at
+                   SQL
                    .where(user_id: @chosen_user_id)
                    .where(date_range_condition)
                    .order('DATE(lab_tests.created_at) ASC, lab_tests.created_at DESC, lab_tests.recordable_id DESC')
@@ -153,20 +158,20 @@ class LabTestsController < ApplicationController
   def date_range_condition
     return nil unless params[:start_date].present? || params[:end_date].present?
 
-    conditions = []
     values = {}
+    conditions = []
 
-    if params[:start_date].present?
-      conditions << 'DATE(lab_tests.created_at) >= :start_date'
-      values[:start_date] = Date.parse(params[:start_date])
-    end
-
-    if params[:end_date].present?
-      conditions << 'DATE(lab_tests.created_at) <= :end_date'
-      values[:end_date] = Date.parse(params[:end_date])
-    end
+    add_date_condition(conditions, values, :start_date, '>=')
+    add_date_condition(conditions, values, :end_date, '<=')
 
     [conditions.join(' AND '), values]
+  end
+
+  def add_date_condition(conditions, values, date_param, operator)
+    return if params[date_param].blank?
+
+    conditions << "DATE(lab_tests.created_at) #{operator} :#{date_param}"
+    values[date_param] = Date.parse(params[date_param])
   end
 end
 # rubocop:enable Metrics/ClassLength
