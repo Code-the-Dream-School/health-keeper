@@ -4,7 +4,9 @@
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
   before_action :build_lab_test, only: %i[create]
+  before_action :set_filter_by_user_id, only: %i[index]
   before_action :set_biomarkers, only: %i[index new edit create]
+
   # GET /lab_tests or /lab_tests.json
   def index
     authorize LabTest
@@ -105,19 +107,7 @@ class LabTestsController < ApplicationController
   def handle_error_response(message = nil)
     flash.now[:alert] = message if message
     @users = User.all if current_user.full_access_roles_can?
-    load_error_dependencies
     render :new, status: :unprocessable_entity
-  end
-
-  def determine_redirect_path
-    @health_record || @lab_test
-  end
-
-  def load_error_dependencies
-    return if @lab_test.biomarker_id.blank?
-
-    @selected_biomarker = @biomarkers.find(@lab_test.biomarker_id)
-    @reference_ranges = @selected_biomarker.reference_ranges
   end
 
   def set_biomarkers
@@ -133,8 +123,8 @@ class LabTestsController < ApplicationController
   end
 
   def set_user
-    if current_user.full_access_roles_can? && params[:user_id].present?
-      User.find(params[:user_id])
+    if current_user.full_access_roles_can? && lab_test_params[:user_id].present?
+      User.find(lab_test_params[:user_id])
     else
       current_user
     end
