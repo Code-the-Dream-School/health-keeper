@@ -5,6 +5,19 @@ restart: docker-down docker-up
 init: docker-build docker-up bundle-install wait-db setup-db
 reinit: docker-down-all docker-build docker-up bundle-install wait-db setup-db
 
+db\:setup: up setup-db
+bundle-install: up bin-bundle-install
+bundle-add: up bin-bundle-install
+routes: up rails-routes
+generate: up rails-generate
+db\:migrate: up migrate-db
+db\:rollback: up rollback-db
+db\:setup: up setup-db
+db\:reset: up reset-db
+db\:seed: up seed-db
+rspec: up test
+rubocop: up linter
+
 docker-build:
 	docker compose build --no-cache
 
@@ -17,16 +30,16 @@ docker-down:
 docker-down-all:
 	docker-compose down -v --remove-orphans
 
-bundle-install:
+bin-bundle-install:
 	docker-compose exec -T health-keeper-app ./bin/bundle install
 
-bundle-add:
+bin-bundle-add:
 	docker-compose exec -T health-keeper-app ./bin/bundle add $(gem)
 
-routes:
+rails-routes:
 	docker-compose exec -T health-keeper-app rails routes
 
-generate:
+rails-generate:
 	docker-compose exec -T health-keeper-app rails generate $(options)
 
 wait-db:
@@ -34,6 +47,10 @@ wait-db:
 
 migrate-db:
 	docker-compose exec -T health-keeper-app rails db:migrate
+
+STEP ?= 1
+rollback-db:
+	docker-compose exec -T health-keeper-app rails db:rollback STEP=$(STEP)
 
 setup-db:
 	docker-compose exec -T health-keeper-app rails db:setup
@@ -54,5 +71,5 @@ test:
 	docker-compose exec -T health-keeper-app rspec
 
 options ?=
-rubocop:
+linter:
 	docker-compose exec -T health-keeper-app rubocop $(options)

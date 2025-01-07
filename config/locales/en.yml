@@ -62,6 +62,19 @@ en:
       success: "Lab test was successfully updated."
     destroy:
       success: "Lab test was successfully removed."
+  admin:
+    users:
+      update:
+        success: "User was successfully updated."
+      destroy:
+        success: "User was successfully removed."
+      update_roles:
+        success: "User roles were successfully updated."
+      update_assigned_users:
+        success: "Users were successfully assigned."
+      switch_user:
+        success: "Client was switched"
+        failure: "Client was not switched"
 
   application:
     user_not_authorized:
@@ -69,3 +82,22 @@ en:
 
   pdfs:
     supported_labs: "We support only this list of PDF's templates and others won't be properly parsed: Quest Diagnostics, LabCorp, Mayo Clinic"
+    failure: "You are not authorized to perform this action."
+
+  errors:
+    messages:
+      invalid_roles_detected: "Invalid roles detected: %{invalid_roles}"
+      empty_roles_detected: "You can not leave user without any role"
+      remove_role_failure: "Failed to remove role: %{role}"
+      add_role_failure: "Failed to add role: %{role}"
+      unexpected_error: "Unexpected error while updating user"
+      remove_user_assignment_failure: "Failed to unseat user with ID: %{id}"
+      add_user_assignment_failure: "Failed to assign user with ID: %{role}"
+
+  activerecord:
+    errors:
+      models:
+        lab_test:
+          attributes:
+            value:
+              must_be_nonnegative_and_numeric: "must be both nonnegative and numeric"

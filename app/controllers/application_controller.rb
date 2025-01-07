@@ -5,9 +5,8 @@ class ApplicationController < ActionController::Base
   include LabTestCategorization
 
   before_action :authenticate_user!
-
   before_action :configure_permitted_parameters, if: :devise_controller?
-
+  before_action :set_filter_by_user_id
   before_action :set_time_zone
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -37,8 +36,11 @@ class ApplicationController < ActionController::Base
 
   def record_not_found(error)
     Rails.logger.debug { "Entity #{error.model} with id #{error.id} is not found." }
-
     render file: "#{::Rails.root}/public/404.html", status: :not_found
+  end
+
+  def set_filter_by_user_id
+    @chosen_user_id = session.fetch(:user_id, current_user&.id)
   end
 
   def pdf_dropdown_item
@@ -51,11 +53,9 @@ class ApplicationController < ActionController::Base
       begin
         Time.zone = browser_tz
       rescue ArgumentError
-        # If timezone is invalid, use default
         Time.zone = 'UTC'
       end
     else
-      # Default to UTC if no browser timezone is set
       Time.zone = 'UTC'
     end
   end

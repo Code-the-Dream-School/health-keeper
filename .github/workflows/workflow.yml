@@ -32,6 +32,8 @@ jobs:
         run: gem install rubocop-rspec_rails
       - name: Install Rubocop Factory Bot
         run: gem install rubocop-factory_bot
+      - name: Install Rubocop Capybara
+        run: gem install rubocop-capybara
       - name: Check code
         run: rubocop
   rspec-test:
@@ -70,5 +72,7 @@ jobs:
         run: |
           bundler exec rails db:create
           bundler exec rails db:migrate
+      - name: Enhance prepare commands with tailwindcss:build
+        run: bundle exec rake spec:prepare
       - name: Run tests
         run: bundler exec rspec

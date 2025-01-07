@@ -16,38 +16,25 @@ RUN apt-get update -qq && apt-get install -y \
   build-essential \
   curl
 
-# Install rbenv
-RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv && \
-  echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && \
-  echo 'eval "$(rbenv init -)"' >> ~/.bashrc && \
-  git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build && \
-  echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
-
-# Install the specified Ruby version using rbenv
-ENV PATH="/root/.rbenv/bin:/root/.rbenv/shims:$PATH"
-RUN rbenv install $RUBY_VERSION && rbenv global $RUBY_VERSION
-
 # Set the working directory
 WORKDIR /app
 
-# Copy the Gemfile and Gemfile.lock
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
+# Copy Gemfile and create Gemfile.lock if it doesn't exist
+COPY Gemfile Gemfile.lock* ./
 
-# Install Gems dependencies
-RUN gem install bundler && bundle install
+# Install gems with full index
+RUN bundle config set --local path 'vendor/bundle' && \
+    bundle config set --local without 'development test' && \
+    bundle install --full-index --jobs 4 --retry 3
 
 # Copy the application code
 COPY . /app
 
-# Precompile assets (optional, if using Rails with assets)
+# Precompile assets
 RUN bundle exec rake assets:precompile
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Command to run the server
-CMD ["./bin/dev"]
-
-# Remove server.pid on container start
+# Remove server.pid on container start and run the server
 ENTRYPOINT rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'

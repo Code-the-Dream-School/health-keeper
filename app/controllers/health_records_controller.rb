@@ -6,7 +6,8 @@ class HealthRecordsController < ApplicationController
 
   # GET /health_records or /health_records.json
   def index
-    @health_records = policy_scope(HealthRecord.all)
+    authorize HealthRecord
+    @health_records = policy_scope(HealthRecord).where(user_id: @chosen_user_id)
   end
 
   # GET /health_records/1 or /health_records/1.json
