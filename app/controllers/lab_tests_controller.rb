@@ -29,7 +29,6 @@ class LabTestsController < ApplicationController
   def new
     @lab_test = LabTest.new
     authorize @lab_test
-    # @biomarkers = Biomarker.all
     @users = User.all if current_user.full_access_roles_can?
 
     respond_to do |format|

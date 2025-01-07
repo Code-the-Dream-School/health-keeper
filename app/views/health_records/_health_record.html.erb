@@ -1,17 +1,17 @@
-<tr id="<%= dom_id health_record %>" class="tw-bg-white tw-border-b tw-bg-white tw-border-gray-300 tw-hover:bg-gray-700 tw-text-center">
-  <th scope="row" class="tw-px-6 tw-py-4 tw-font-medium tw-text-gray-900 tw-whitespace-nowrap tw-dark:tw-text-white">
+<tr id="<%= dom_id health_record %>" class="bg-white border-b bg-white border-gray-300 hover:bg-gray-700 hover:text-white text-center">
+  <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
     <%= health_record.user.full_name %>
   </th>
-  <td class="tw-px-2 tw-py-2 tw-text-ellipsis tw-overflow-hidden tw-max-w-20 tw-whitespace-nowrap">
+  <td class="px-2 py-2 text-ellipsis overflow-hidden max-w-20 whitespace-nowrap">
     <%= health_record.notes %>
   </td>
-  <td class="tw-px-6 tw-py-4">
+  <td class="px-6 py-4">
     <%= format_date_with_time health_record.created_at %>
   </td>
-  <td class="tw-px-6 tw-py-4">
+  <td class="px-6 py-4">
     <%= format_date_with_time health_record.updated_at %>
   </td>
-  <td class="tw-px-6 tw-py-4 tw-text-center">
-    <%= link_to "Show details", health_record, class: "tw-font-medium tw-text-blue-600 tw-dark:tw-text-blue-500 tw-hover:tw-underline" %>
+  <td class="px-6 py-4 text-center">
+    <%= link_to "Show details", health_record, class: "font-medium text-blue-600 dark:text-blue-500 hover:underline" %>
   </td>
 </tr>

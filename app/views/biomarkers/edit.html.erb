@@ -1,12 +1,24 @@
-<h1>Editing biomarker</h1>
+<h1 class="text-2xl my-3">Editing biomarker</h1>
 
 <%= render "form", biomarker: @biomarker %>
 
 <div>
-  <%= link_to "Add Reference Range", new_biomarker_reference_range_path(@biomarker) %>
+  <%= link_to "Add Reference Range",
+              new_biomarker_reference_range_path(@biomarker),
+              method: :get,
+              class: "mb-4 create-button"
+  %>
 </div>
 
 <div>
-  <%= link_to "Show this biomarker", @biomarker %> |
-  <%= link_to "Back to biomarkers", biomarkers_path %>
+  <%= link_to "Show this biomarker",
+              @biomarker,
+              method: :get,
+              class: "primary-button"
+  %>
+  <%= link_to "Back to biomarkers",
+              biomarkers_path,
+              method: :get,
+              class: "secondary-button"
+  %>
 </div>
