@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.button {
+    @apply inline-block text-center px-4 py-2 rounded;
+}
+
+.primary-button {
+    @apply inline-block text-center px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700;
+}
+
+.secondary-button {
+    @apply inline-block text-center px-4 py-2 rounded bg-gray-600 text-white hover:bg-gray-700;
+}
+
+.outline-secondary-button {
+    @apply inline-block text-center px-4 py-2 rounded border border-gray-600 text-gray-600 hover:bg-gray-100;
+}
+
+.create-button {
+    @apply inline-block text-center px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700;
+}
+
+.outline-create-button {
+    @apply inline-block text-center px-4 py-2 rounded border border-green-600 text-green-600 hover:bg-green-100;
+}
+
+.edit-button {
+    @apply inline-block text-center px-4 py-2 rounded bg-yellow-500 text-white hover:bg-yellow-600;
+}
+
+.delete-button {
+    @apply mt-6 mr-6 mb-6 font-bold py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700;
+}
+
+.outline-primary-button {
+    @apply inline-block text-center px-4 py-2 rounded border border-blue-600 text-blue-600 hover:bg-blue-100;
+}
+
+.large-button {
+    @apply text-lg px-6 py-3;
+}
+
+.small-button {
+    @apply text-sm px-3 py-1;
+}

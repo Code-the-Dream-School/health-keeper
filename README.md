@@ -8,12 +8,6 @@ The most efficient way to set up dev env is to utilize [docker and docker compos
 ### Legacy approach with manual installation
 Also, there is an old less efficient way to set up everything by [manually installing all dependencies](docs/ManualInstallation.md).
 
-### Bootstrap and TailwindCSS
-As we have both Bootstrap and TailwindCSS installed inside the project we need to split them somehow.
-> Thus, to utilize TailwindCSS make sure that you use the classes with the prefix.
-If you want to add a `p-1` class then it should be `tw-p-1` now.
-But it does not apply to the states, for example, if you want to add a `p-2` on hover, then your class should be `hover:tw-p-2`.
-
 ## Useful commands
 - In order to reinit everything run `make reinit`. It will drop all containers and recreate everything from the scratch.
 ### DB management:
@@ -69,7 +63,7 @@ while running `make` command - you [need to install](https://apple.stackexchange
 ### **High Priority**
 
 1. [ ] **Health Data Management**
-   - [ ] User Story 1: Manual input of blood test results.
+   - [x] User Story 1: Manual input of blood test results.
    - [ ] User Story 2: Import health data from PDF files.
    - [x] User Story 4: Display health data with color-coded references.
 2. [ ] **User Interface and Experience**

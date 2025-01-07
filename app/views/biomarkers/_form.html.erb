@@ -1,14 +1,9 @@
 <%= form_with(model: biomarker) do |form| %>
   <% if biomarker.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(biomarker.errors.count, "error") %> prohibited this biomarker from being saved:</h2>
-
-      <ul>
-        <% biomarker.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
+    <%= render "layouts/error_flash",
+               header: "#{pluralize(biomarker.errors.count, "error")} prohibited this biomarker from being saved:",
+               errors: biomarker.errors.full_messages
+    %>
   <% end %>
 
   <div>
@@ -24,6 +19,6 @@
   <%= render "reference_ranges_form", form: form %>
 
   <div>
-    <%= form.submit class: "tw-my-4 tw-bg-blue-500  tw-hover:bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded" %>
+    <%= form.submit class: "my-4 edit-button" %>
   </div>
 <% end %>

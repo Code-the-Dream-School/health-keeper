@@ -1,3 +1,37 @@
-<h1 class="tw-text-3xl tw-font-bold">
+<h1 class="text-3xl font-bold text-center my-5">
   Welcome to Health Keeper
 </h1>
+<ul class="flex gap-4">
+  <li class="border p-8 rounded-xl w-64 h-64">
+  <%= link_to "My health records",
+              health_records_path,
+              method: :get,
+      class: "text-bold underline"
+  %>
+  <p class="mt-4">Look at all records about your health</p>
+</li>
+  <li class="border p-8 rounded-xl  w-64 h-64">
+    <%= link_to "My Lab tests",
+                lab_tests_path,
+                method: :get,
+        class: "text-bold underline"
+    %>
+    <p class="mt-4">Look at results of your lab tests</p>
+  </li>
+  <li class="border p-8 rounded-xl  w-64 h-64">
+    <%= link_to "My Measurements",
+                measurements_path,
+                method: :get,
+                class: "text-bold underline"
+    %>
+    <p class="mt-4">Store all data about your body measurements</p>
+  </li>
+  <li class="border p-8 rounded-xl  w-64 h-64">
+    <%= link_to "My biomarkers",
+                biomarkers_path,
+                method: :get,
+                class: "text-bold underline"
+    %>
+    <p class="mt-4">All available biomarkers data</p>
+  </li>
+</ul>
