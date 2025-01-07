@@ -15,7 +15,8 @@
         <%= label_tag :user_id, "Select Patient", class: "block text-sm font-medium text-gray-700" %>
         <%= form.select :user_id,
             options_for_select(
-              assigned_users_list_for_select(current_user, current_user)
+              assigned_users_list_for_select(current_user, current_user),
+              @chosen_user_id
             ),
             { include_blank: false },
             class: "border-blue-500 rounded"
