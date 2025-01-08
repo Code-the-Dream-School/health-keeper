@@ -4,7 +4,6 @@
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
   before_action :build_lab_test, only: %i[create]
-  before_action :set_filter_by_user_id, only: %i[index]
   before_action :set_biomarkers, only: %i[index new edit create]
 
   # GET /lab_tests or /lab_tests.json
@@ -38,13 +37,7 @@ class LabTestsController < ApplicationController
   def new
     @lab_test = LabTest.new
     authorize @lab_test
-    # @biomarkers = Biomarker.all
     @users = User.all if current_user.full_access_roles_can?
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream { render turbo_stream: turbo_stream.replace('lab_test_form', partial: 'form') }
-    end
   end
 
   # GET /lab_tests/1/edit
