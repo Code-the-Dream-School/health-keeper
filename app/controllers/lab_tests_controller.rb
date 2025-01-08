@@ -10,19 +10,12 @@ class LabTestsController < ApplicationController
   def index
     authorize LabTest
 
-    # Get unique dates first, using the latest record for each date
     @recordables = policy_scope(LabTest)
-                   .select(<<~SQL.squish)
-                     DISTINCT ON (DATE(lab_tests.created_at))#{' '}
-                     DATE(lab_tests.created_at) as created_at,#{' '}
-                     lab_tests.recordable_id,#{' '}
-                     lab_tests.created_at as full_created_at
-                   SQL
                    .where(user_id: @chosen_user_id)
-                   .where(date_range_condition)
-                   .order('DATE(lab_tests.created_at) ASC, lab_tests.created_at DESC, lab_tests.recordable_id DESC')
+                   .in_date_range(params[:start_date], params[:end_date])
+                   .latest_records
+                   .ordered_by_date
 
-    # Keep existing biomarkers query
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
                   .where(lab_tests: { user_id: @chosen_user_id })
@@ -146,25 +139,6 @@ class LabTestsController < ApplicationController
 
   def filter_params
     params.permit(:user_id)
-  end
-
-  def date_range_condition
-    return nil unless params[:start_date].present? || params[:end_date].present?
-
-    values = {}
-    conditions = []
-
-    add_date_condition(conditions, values, :start_date, '>=')
-    add_date_condition(conditions, values, :end_date, '<=')
-
-    [conditions.join(' AND '), values]
-  end
-
-  def add_date_condition(conditions, values, date_param, operator)
-    return if params[date_param].blank?
-
-    conditions << "DATE(lab_tests.created_at) #{operator} :#{date_param}"
-    values[date_param] = Date.parse(params[date_param])
   end
 end
 # rubocop:enable Metrics/ClassLength
