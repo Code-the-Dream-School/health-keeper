@@ -66,6 +66,10 @@ en:
       from: "From"
       to: "To"
       filter: "Filter"
+    no_data_placeholder:
+      no_data_title: "No Lab Tests Found"
+      no_data_message_with_dates: "No lab tests were found between %{start_date} and %{end_date}"
+      no_data_message_no_dates: "No lab tests have been recorded yet"
   admin:
     users:
       update:
