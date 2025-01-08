@@ -4,17 +4,22 @@
         <span class="tw-mr-3 tw-text-sm tw-font-medium"><%= t('.from') %></span>
         <%= f.date_field :start_date, 
           value: params[:start_date], 
+          min: "1900-01-01",
+          max: "2100-01-01",
+          onchange: "this.nextElementSibling.nextElementSibling.min=this.value",
           class: "tw-rounded-md tw-border tw-border-gray-300 tw-py-2 tw-px-3 tw-mr-6",
           placeholder: "mm/dd/yyyy" %>
 
         <span class="tw-mr-3 tw-text-sm tw-font-medium"><%= t('.to') %></span>
         <%= f.date_field :end_date, 
           value: params[:end_date], 
+          min: params[:start_date] || "1900-01-01",
+          max: "2100-01-01",
           class: "tw-rounded-md tw-border tw-border-gray-300 tw-py-2 tw-px-3 tw-mr-6",
           placeholder: "mm/dd/yyyy" %>
 
         <%= f.submit t('.filter'), 
-          class: "tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600" %>
+          class: "tw-btn tw-btn-blue tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600" %>
     </div>
     <% end %>
 </div>
