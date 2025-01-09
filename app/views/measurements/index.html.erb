@@ -1,49 +1,53 @@
 <section>
-  <header class="my-2 flex flex-center justify-between items-center">
-    <h1 class="text-center text-2xl my-3">Measurements</h1>
-    <%= link_to "New measurement", new_measurement_path, class: "create-button" %>
-  </header>
+    <header class="my-2 flex flex-center justify-between items-center">
+        <h1 class="text-center text-2xl my-3">Measurements</h1>
+        <%= link_to "New measurement",
+                new_measurement_path,
+                class: "create-button",
+                data: { turbo_frame: "_top" }
+    %>
+    </header>
 
-  <div id="measurements" class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div id="measurements" class="relative overflow-x-auto shadow-md sm:rounded-lg">
 
-    <table class="w-full text-sm text-left text-right rounded-md">
+        <table class="w-full text-sm text-left text-right rounded-md">
 
-      <thead class="text-xs text-gray-700 uppercase bg-gray-400 text-center">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-400 text-center">
 
-      <tr>
-        <th scope="col" class="px-6 py-3">
-          User
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Type
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Value
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Source
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Notes
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Created date
-        </th>
-        <th scope="col" class="px-6 py-3">
-          <span class="sr-only">Show</span>
-        </th>
-      </tr>
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        User
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Type
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Value
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Source
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Notes
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Created date
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        <span class="sr-only">Show</span>
+                    </th>
+                </tr>
 
-      </thead>
+            </thead>
 
-      <tbody>
-      <% @measurements.each do |measurement| %>
-        <%= render measurement %>
-      <% end %>
-      </tbody>
+            <tbody>
+                <% @measurements.each do |measurement| %>
+                <%= render measurement %>
+                <% end %>
+            </tbody>
 
-    </table>
+        </table>
 
-  </div>
+    </div>
 
 </section>

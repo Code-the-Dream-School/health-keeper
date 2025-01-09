@@ -1,9 +1,10 @@
-<h1 class="text-2xl my-3">New measurement</h1>
+<div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">New Measurement</h1>
+        <%= link_to "Back to measurements", 
+                measurements_path,
+                class: "secondary-button" %>
+    </div>
 
-<div>
-  <%= link_to "Back to measurements",
-              measurements_path,
-              method: :get,
-              class: "secondary-button"
-  %>
+    <%= render "form", measurement: @measurement %>
 </div>
