@@ -49,8 +49,8 @@ module Healthkeeper
     config.x.dates = {
       min_date: '1900-01-01',
       max_date: '2100-01-01',
-      default_start_date: -> { Date.today.beginning_of_year },
-      default_end_date: -> { Date.today }
+      default_start_date: -> { Time.zone.today.beginning_of_year },
+      default_end_date: -> { Time.zone.today }
     }
   end
 end
