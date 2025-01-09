@@ -44,5 +44,13 @@ module Healthkeeper
     # Fixes broken tailwind.css build for CI
     # @see https://github.com/rails/tailwindcss-rails/issues/153#issuecomment-1225895063
     config.assets.css_compressor = nil
+
+    # Date range settings for lab tests
+    config.x.dates = {
+      min_date: '1900-01-01',
+      max_date: '2100-01-01',
+      default_start_date: -> { Date.today.beginning_of_year },
+      default_end_date: -> { Date.today }
+    }
   end
 end
