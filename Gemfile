@@ -5,11 +5,13 @@ source 'https://rubygems.org'
 ruby '3.2.1'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.1.5.1'
-gem 'actionmailer', '>= 7.1.5.1'
-gem 'actionpack', '>= 7.1.5.1'
-gem 'actiontext', '>= 7.1.5.1'
-gem 'rails-html-sanitizer', '>= 1.6.1'
+gem 'rails', '~> 7.1.5'
+
+# Rails components with security updates
+gem 'actionmailer', '~> 7.1.5'
+gem 'actionpack', '~> 7.1.5'
+gem 'actiontext', '~> 7.1.5'
+gem 'rails-html-sanitizer', '~> 1.6.1'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
@@ -51,7 +53,7 @@ gem 'email_validator'
 gem 'bootstrap'
 gem 'sassc', '~> 2.4'
 gem 'sassc-rails', '~> 2.1.2'
-gem 'tailwindcss-rails', '~> 3.1.0'
+gem 'tailwindcss-rails', '~> 2.7.7'
 
 # PDF parsing
 gem 'pdf-reader'
@@ -74,7 +76,7 @@ group :development do
   gem 'web-console'
 
   # Linters
-  gem 'rubocop', require: false
+  gem 'rubocop', require: false 
   gem 'rubocop-factory_bot', require: false
   gem 'rubocop-capybara', require: false
   gem 'rubocop-performance', '~> 1.12.0', require: false

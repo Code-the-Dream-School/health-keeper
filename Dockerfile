@@ -19,18 +19,23 @@ RUN apt-get update -qq && apt-get install -y \
 # Set the working directory
 WORKDIR /app
 
+# Update RubyGems and install bundler
+RUN gem update --system && \
+    gem cleanup && \
+    gem install bundler -v 2.4.22
+
 # Copy Gemfile and create Gemfile.lock if it doesn't exist
 COPY Gemfile Gemfile.lock* ./
+RUN [ -f Gemfile.lock ] || touch Gemfile.lock
 
 # Install gems with full index
 RUN bundle config set --local path 'vendor/bundle' && \
-    bundle config set --local without 'development test' && \
     bundle install --full-index --jobs 4 --retry 3
 
 # Copy the application code
 COPY . /app
 
-# Precompile assets
+# Precompile assets (optional, if using Rails with assets)
 RUN bundle exec rake assets:precompile
 
 # Expose the port the app runs on

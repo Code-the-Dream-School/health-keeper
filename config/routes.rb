@@ -3,6 +3,7 @@
 Rails.application.routes.draw do
   resources :biomarkers do
     resources :reference_ranges
+    resources :reference_ranges
   end
   resources :reference_ranges, only: %i[show new create edit update destroy]
   resources :measurements, only: [:index, :show]
