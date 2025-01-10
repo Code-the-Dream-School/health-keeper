@@ -13,8 +13,7 @@ class LabTestsController < ApplicationController
     @recordables = policy_scope(LabTest)
                    .where(user_id: @chosen_user_id)
                    .in_date_range(params[:start_date], params[:end_date])
-                   .latest_records
-                   .ordered_by_date
+                   .order_by_date
 
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
@@ -35,12 +34,12 @@ class LabTestsController < ApplicationController
 
   # GET /lab_tests/1/edit
   def edit
-    # authorize @lab_test
+    authorize @lab_test
   end
 
   # POST /lab_tests or /lab_tests.json
   def create
-    # authorize @lab_test
+    authorize @lab_test
 
     ActiveRecord::Base.transaction do
       @health_record = HealthRecord.new(

@@ -62,11 +62,11 @@ en:
       success: "Lab test was successfully updated."
     destroy:
       success: "Lab test was successfully removed."
-    date_filter:
+    lab_test_date_filter:
       from: "From"
       to: "To"
       filter: "Filter"
-    no_data_placeholder:
+    lab_test_no_data_placeholder:
       no_data_title: "No Lab Tests Found"
       no_data_message_with_dates: "No lab tests were found between %{start_date} and %{end_date}"
       no_data_message_no_dates: "No lab tests have been recorded yet"
