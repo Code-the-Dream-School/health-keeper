@@ -13,16 +13,13 @@ class LabTestsController < ApplicationController
   # GET /lab_tests or /lab_tests.json
   def index
     authorize LabTest
-    authorize LabTest
     @recordables = policy_scope(LabTest)
                    .select(:recordable_id, :created_at)
-                   .where(user_id: @chosen_user_id)
                    .where(user_id: @chosen_user_id)
                    .order(:created_at)
                    .group(:recordable_id, :created_at)
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
-                  .where(lab_tests: { user_id: @chosen_user_id })
                   .where(lab_tests: { user_id: @chosen_user_id })
   end
 
@@ -35,7 +32,6 @@ class LabTestsController < ApplicationController
   def new
     @lab_test = LabTest.new
     authorize @lab_test
-    # @biomarkers = Biomarker.all
     @users = User.all if current_user.full_access_roles_can?
 
     respond_to do |format|
@@ -141,35 +137,8 @@ class LabTestsController < ApplicationController
     @biomarkers = Biomarker.all
   end
 
-  def handle_success_response
-    flash[:notice] = t('.success')
-    redirect_to(@health_record)
-  end
-
-  def handle_error_response(message = nil)
-    flash.now[:alert] = message if message
-    @users = User.all if current_user.full_access_roles_can?
-    render :new, status: :unprocessable_entity
-  end
-
-  def set_biomarkers
-    @biomarkers = Biomarker.all
-  end
-
   def set_lab_test
     @lab_test = LabTest.find(params[:id])
-  end
-
-  def save_health_record_with_lab_test
-    @health_record.save && @lab_test.save
-  end
-
-  def set_user
-    if current_user.full_access_roles_can? && lab_test_params[:user_id].present?
-      User.find(lab_test_params[:user_id])
-    else
-      current_user
-    end
   end
 
   def save_health_record_with_lab_test
@@ -199,10 +168,5 @@ class LabTestsController < ApplicationController
   def filter_params
     params.permit(:user_id)
   end
-
-  def filter_params
-    params.permit(:user_id)
-  end
 end
-# rubocop:enable Metrics/ClassLength
 # rubocop:enable Metrics/ClassLength

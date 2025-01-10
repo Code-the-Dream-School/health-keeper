@@ -7,7 +7,6 @@ module.exports = {
     './app/javascript/**/*.js',
     './app/views/**/*.{erb,haml,html,slim}'
   ],
-  prefix: "tw-",
   theme: {
     extend: {
       fontFamily: {
