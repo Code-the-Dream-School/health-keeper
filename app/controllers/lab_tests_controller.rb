@@ -9,7 +9,6 @@ class LabTestsController < ApplicationController
   # GET /lab_tests or /lab_tests.json
   def index
     authorize LabTest
-    # Get all records with proper includes and ordering
     @recordables = policy_scope(LabTest)
                    .select(:recordable_id, :created_at)
                    .where(user_id: @chosen_user_id)
@@ -45,7 +44,7 @@ class LabTestsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @health_record = HealthRecord.new(
-        user: set_user,
+        user: lab_test_user,
         notes: lab_test_params[:notes]
       )
 
@@ -118,7 +117,7 @@ class LabTestsController < ApplicationController
     @health_record.save && @lab_test.save
   end
 
-  def set_user
+  def lab_test_user
     if current_user.full_access_roles_can? && lab_test_params[:user_id].present?
       User.find(lab_test_params[:user_id])
     else
@@ -127,7 +126,7 @@ class LabTestsController < ApplicationController
   end
 
   def build_lab_test
-    user = set_user
+    user = lab_test_user
     @lab_test = user.lab_tests.build(lab_test_params)
   end
 

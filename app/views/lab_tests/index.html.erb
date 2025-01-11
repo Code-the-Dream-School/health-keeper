@@ -1,19 +1,19 @@
 <section>
-    <header class="my-2 flex flex-center justify-between items-center">
-        <h1 class="text-center text-2xl my-3">Lab Tests</h1>
-        <%= link_to "New Lab Test",
+  <header class="my-2 flex flex-center justify-between items-center">
+    <h1 class="text-center text-2xl my-3">Lab Tests</h1>
+    <%= link_to "New Lab Test",
                 new_lab_test_path,
                 method: :get,
                 class: "create-button",
                 data: { turbo_frame: "_top" }
     %>
-    </header>
-    <div class="tw-container tw-mx-auto">
-        <%= render 'date_filter' %>
-    </div>
-    <% if @recordables.present? %>
+  </header>
+  <div class="tw-container tw-mx-auto">
+    <%= render 'date_filter' %>
+  </div>
+  <% if @recordables.present? %>
     <%= render "index_table", recordables: @recordables, biomarkers: @biomarkers %>
-    <% else %>
+  <% else %>
     <%= render 'no_data_placeholder' %>
-    <% end %>
+  <% end %>
 </section>
