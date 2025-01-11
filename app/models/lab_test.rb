@@ -13,6 +13,22 @@ class LabTest < ApplicationRecord
                       message: :must_be_nonnegative_and_numeric
                     }
 
+  scope :in_date_range, lambda { |start_date, end_date|
+    scope = all
+    scope = scope.where(created_at: Date.parse(start_date).beginning_of_day..) if start_date.present?
+    scope = scope.where(created_at: ..Date.parse(end_date).end_of_day) if end_date.present?
+    scope
+  }
+
+  scope :with_date, lambda { |date|
+    where(created_at: date.all_day)
+  }
+
+  # Single ordering scope with consistent secondary ordering
+  scope :order_by_date, lambda {
+    order(created_at: :asc, id: :asc)
+  }
+
   class Status
     NORMAL = :normal
     HIGH = :high

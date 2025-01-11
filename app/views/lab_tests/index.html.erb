@@ -8,6 +8,12 @@
                 data: { turbo_frame: "_top" }
     %>
   </header>
-
-  <%= render "index_table", recordables: @recordables, biomarkers: @biomarkers %>
+  <div class="tw-container tw-mx-auto">
+    <%= render 'date_filter' %>
+  </div>
+  <% if @recordables.present? %>
+    <%= render "index_table", recordables: @recordables, biomarkers: @biomarkers %>
+  <% else %>
+    <%= render 'no_data_placeholder' %>
+  <% end %>
 </section>
