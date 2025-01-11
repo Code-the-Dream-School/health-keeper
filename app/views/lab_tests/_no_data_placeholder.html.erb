@@ -1,5 +1,5 @@
-<div class="flex flex-col">
-    <div class="flex flex-col items-center justify-center p-4">
+<div class="flex flex-col items-center justify-center w-full p-4">
+    <div class="flex justify-center w-full">
         <svg fill="#000" height="50px" width="50px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512.001 512.001" xml:space="preserve">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -22,20 +22,20 @@
             </g>
         </svg>
     </div>
-    <div class="flex flex-col items-center justify-center">
-        <h3 class="text-lg font-medium text-gray-900 mb-1 relative z-10">
-            <%= t('.no_data_title') %>
+    <div class="flex flex-col items-center justify-center max-w-md mx-auto text-center p-4">
+        <h3 class="font-medium text-gray-900 mb-2 text-lg sm:text-xl">
+            <%= t('lab_tests.lab_test_no_data_placeholder.no_data_title') %>
         </h3>
 
         <% if params[:start_date].present? && params[:end_date].present? %>
-        <p class="text-gray-500 relative z-10">
-            <%= t('.no_data_message_with_dates', 
-                start_date: Date.parse(params[:start_date]).strftime("%B %d, %Y"),
-                end_date: Date.parse(params[:end_date]).strftime("%B %d, %Y")) %>
+        <p class="text-gray-500 text-sm sm:text-base">
+            <%= t('lab_tests.lab_test_no_data_placeholder.no_data_message_with_dates', 
+                    start_date: Date.parse(params[:start_date]).strftime("%B %d, %Y"),
+                    end_date: Date.parse(params[:end_date]).strftime("%B %d, %Y")) %>
         </p>
         <% else %>
-        <p class="text-gray-500 relative z-10">
-            <%= t('.no_data_message_no_dates') %>
+        <p class="text-gray-500 text-sm sm:text-base">
+            <%= t('lab_tests.lab_test_no_data_placeholder.no_data_message_no_dates') %>
         </p>
         <% end %>
     </div>

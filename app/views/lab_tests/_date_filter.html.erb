@@ -1,7 +1,7 @@
 <div class="mb-6 flex justify-between items-center">
     <%= form_with(url: lab_tests_path, method: :get, class: "inline-flex items-center") do |f| %>
     <div class="inline-flex items-center">
-        <span class="mr-3 text-sm font-medium"><%= t('.lab_test_date_filter.from') %></span>
+        <span class="mr-3 text-sm font-medium"><%= t('lab_tests.lab_test_date_filter.from') %></span>
         <%= f.date_field :start_date, 
           value: params[:start_date] || Rails.application.config.x.lab_test_date_range[:default_start_date].call,
           min: Rails.application.config.x.lab_test_date_range[:min_date],
@@ -10,7 +10,7 @@
           class: "rounded-md border border-gray-300 py-2 px-3 mr-6",
           placeholder: "mm/dd/yyyy" %>
 
-        <span class="mr-3 text-sm font-medium"><%= t('.lab_test_date_filter.to') %></span>
+        <span class="mr-3 text-sm font-medium"><%= t('lab_tests.lab_test_date_filter.to') %></span>
         <%= f.date_field :end_date, 
           value: params[:end_date] || Rails.application.config.x.lab_test_date_range[:default_end_date].call,
           min: params[:start_date] || Rails.application.config.x.lab_test_date_range[:min_date],
@@ -18,7 +18,7 @@
           class: "rounded-md border border-gray-300 py-2 px-3 mr-6",
           placeholder: "mm/dd/yyyy" %>
 
-        <%= f.submit t('.lab_test_date_filter.filter'), 
+        <%= f.submit t('lab_tests.lab_test_date_filter.filter'), 
           class: "primary-button" %>
     </div>
     <% end %>
