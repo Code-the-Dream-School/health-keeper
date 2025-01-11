@@ -9,11 +9,6 @@ class LabTestsController < ApplicationController
   # GET /lab_tests or /lab_tests.json
   def index
     authorize LabTest
-
-    base_scope = policy_scope(LabTest)
-                 .where(user_id: @chosen_user_id)
-                 .in_date_range(params[:start_date], params[:end_date])
-
     # Get all records with proper includes and ordering
     @recordables = policy_scope(LabTest)
                    .select(:recordable_id, :created_at)
