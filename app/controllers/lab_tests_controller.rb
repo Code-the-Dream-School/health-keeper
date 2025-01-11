@@ -125,7 +125,8 @@ class LabTestsController < ApplicationController
   end
 
   def build_lab_test
-    @lab_test = current_user.lab_tests.build(lab_test_params)
+    user = set_user
+    @lab_test = user.lab_tests.build(lab_test_params)
   end
 
   # Only allow a list of trusted parameters through.
