@@ -10,10 +10,17 @@ class LabTestsController < ApplicationController
   def index
     authorize LabTest
 
+    base_scope = policy_scope(LabTest)
+                 .where(user_id: @chosen_user_id)
+                 .in_date_range(params[:start_date], params[:end_date])
+
+    # Get all records with proper includes and ordering
     @recordables = policy_scope(LabTest)
+                   .select(:recordable_id, :created_at)
                    .where(user_id: @chosen_user_id)
                    .in_date_range(params[:start_date], params[:end_date])
-                   .order_by_date
+                   .order(:created_at)
+                   .group(:recordable_id, :created_at)
 
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
