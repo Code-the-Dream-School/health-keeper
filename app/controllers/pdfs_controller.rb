@@ -99,4 +99,8 @@ class PdfsController < ApplicationController
   ensure
     temp_pdf&.unlink
   end
+
+  def pdf_dropdown_item
+    render partial: 'shared/pdf_dropdown_item', layout: false
+  end
 end

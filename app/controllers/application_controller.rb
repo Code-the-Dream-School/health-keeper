@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_filter_by_user_id
-  before_action :set_time_zone
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
@@ -45,18 +44,5 @@ class ApplicationController < ActionController::Base
 
   def pdf_dropdown_item
     render partial: 'shared/pdf_dropdown_item', layout: false
-  end
-
-  def set_time_zone
-    browser_tz = cookies[:browser_timezone]
-    if browser_tz.present?
-      begin
-        Time.zone = browser_tz
-      rescue ArgumentError
-        Time.zone = 'UTC'
-      end
-    else
-      Time.zone = 'UTC'
-    end
   end
 end
