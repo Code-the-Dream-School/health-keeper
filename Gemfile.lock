@@ -128,7 +128,6 @@ GEM
     email_validator (2.2.4)
       activemodel
     erubi (1.13.1)
-    execjs (2.10.0)
     factory_bot (6.5.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.4)
@@ -196,7 +195,6 @@ GEM
       ruby-rc4
       ttfunk
     pg (1.5.9)
-    popper_js (2.11.8)
     psych (5.2.2)
       date
       stringio
@@ -375,7 +373,6 @@ DEPENDENCIES
   actiontext (~> 7.1.5)
   active_storage_validations
   bootsnap
-  bootstrap
   capybara (~> 3.39)
   debug
   devise

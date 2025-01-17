@@ -1,55 +1,70 @@
-<nav class="navbar navbar-expand-lg bg-light">
-  <div class="container">
-    <a class="navbar-brand tw-w-10 tw-h-10" href="/">
-      <%= image_tag("logo.png", alt: "Logo") %>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-          <% %>
-          <%= render "shared/health_records_nav_item" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Lab tests", lab_tests_path, class: "nav-link #{current_page?(lab_tests_path) ? 'active' : ''}" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Measurements", measurements_path, class: "nav-link #{current_page?(measurements_path) ? 'active' : ''}" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Biomarkers", biomarkers_path, class: "nav-link #{current_page?(biomarkers_path) ? 'active' : ''}" %>
-        </li>
-        <li class="nav-item">
-          <% if current_user&.admin? %>
-            <%= link_to "Users", admin_users_path, class: "nav-link #{current_page?(admin_users_path) ? 'active' : ''}" %>
-          <% end %>
-        </li>
-        <li class="nav-item">
-          <% if assigned_users? %>
-            <div class="flex justify-end mb-1">
-              <%= form_with url: switch_user_admin_user_path(current_user), method: :post do |form| %>
-                <%= form.select :user_id,
-                                options_for_select(
-                                  assigned_users_list_for_select(current_user, current_user),
-                                  @chosen_user_id
-                                ),
-                                { include_blank: false },
-                                class: "tw-border-blue-500 rounded"
-                %>
-                <%= form.submit "Switch client", class: "tw-bg-blue-500 tw-hover:bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded" %>
-              <% end %>
-            </div>
-          <% end %>
-        </li>
-      </ul>
+<nav class="bg-gray-100 px-4 py-3">
+  <div class="container mx-auto flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <a href="/" class="w-10 h-10">
+        <%= image_tag("logo.png", alt: "Logo") %>
+      </a>
+
+      <% def nav_bar_classes(page_path)
+           "no-underline text-gray-700 hover:text-black #{current_page?(page_path) ? 'font-bold text-black' : ''}"
+         end
+      %>
+
+      <%# Health Records Dropdown %>
+      <div class="relative" x-data="{ open: false }">
+        <button @click="open = !open" 
+                @click.away="open = false"
+                class="flex items-center space-x-1 text-gray-700 hover:text-black <%= 'font-bold text-black' if controller_name == 'health_records' || controller_name == 'pdfs' %>">
+          <span>Health Records</span>
+          <svg class="w-4 h-4 transition-transform duration-200" 
+               :class="{ 'rotate-180': open }"
+               fill="currentColor" 
+               viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+        
+        <div x-show="open" 
+             x-transition
+             class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+          <div class="py-1">
+            <%= link_to "View All Records", health_records_path, 
+                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 #{controller_name == 'health_records' ? 'font-bold bg-gray-50' : ''}" %>
+            <div class="border-t border-gray-100"></div>
+            <%= link_to "View PDFs", pdfs_path, 
+                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 #{controller_name == 'pdfs' ? 'font-bold bg-gray-50' : ''}" %>
+          </div>
+        </div>
+      </div>
+
+      <%= link_to "Lab tests", lab_tests_path, class: "#{nav_bar_classes(lab_tests_path)}" %>
+      <%= link_to "Measurements", measurements_path, class: "#{nav_bar_classes(measurements_path)}" %>
+      <%= link_to "Biomarkers", biomarkers_path, class: "#{nav_bar_classes(biomarkers_path)}" %>
+      <% if current_user&.admin? %>
+        <%= link_to "Users", admin_users_path, class: "#{nav_bar_classes(admin_users_path)}" %>
+      <% end %>
+      <% if assigned_users? %>
+        <%= form_with url: switch_user_admin_user_path(current_user), method: :post do |form| %>
+          <%= form.select :user_id,
+                          options_for_select(
+                            assigned_users_list_for_select(current_user, current_user),
+                            @chosen_user_id
+                          ),
+                          { include_blank: false },
+                          class: "border-blue-500 rounded"
+          %>
+          <%= form.submit "Switch client", class: "primary-button" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="flex items-center space-x-4">
       <% if user_signed_in? %>
-        <span> Welcome <%= current_user.full_name %> </span>
-        <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "btn btn-outline-primary", form_class: "sign-out-button" %>
+        <span class="no-underline text-gray-700">Welcome <%= current_user.full_name %></span>
+        <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "outline-primary-button", form_class: "sign-out-button" %>
       <% else %>
-        <%= button_to "Sign in", new_user_session_path, class: "btn btn-success" %>
-        <%= link_to "Sign up", new_user_registration_path, class: "btn btn-outline-success" %>
+        <%= button_to "Sign in", new_user_session_path, class: "create-button" %>
+        <%= link_to "Sign up", new_user_registration_path, class: "outline-primary-button" %>
       <% end %>
     </div>
   </div>

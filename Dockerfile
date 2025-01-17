@@ -19,18 +19,12 @@ RUN apt-get update -qq && apt-get install -y \
 # Set the working directory
 WORKDIR /app
 
-# Update RubyGems and install bundler
-RUN gem update --system && \
-    gem cleanup && \
-    gem install bundler -v 2.4.22
+# Copy the Gemfile and Gemfile.lock
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
 
-# Copy Gemfile and create Gemfile.lock if it doesn't exist
-COPY Gemfile Gemfile.lock* ./
-RUN [ -f Gemfile.lock ] || touch Gemfile.lock
-
-# Install gems with full index
-RUN bundle config set --local path 'vendor/bundle' && \
-    bundle install --full-index --jobs 4 --retry 3
+# Install Gems dependencies
+RUN gem install bundler && bundle install --jobs 4 --retry 3
 
 # Copy the application code
 COPY . /app
@@ -41,5 +35,5 @@ RUN bundle exec rake assets:precompile
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Remove server.pid on container start and run the server
-ENTRYPOINT rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'
+# Command to run the server
+CMD ["./bin/dev"]
