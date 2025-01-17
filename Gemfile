@@ -5,13 +5,13 @@ source 'https://rubygems.org'
 ruby '3.2.1'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.1.5'
+gem 'rails', '~> 7.1.3', '>= 7.1.3.4'
 
 # Rails components with security updates
-gem 'actionmailer', '~> 7.1.5'
-gem 'actionpack', '~> 7.1.5'
-gem 'actiontext', '~> 7.1.5'
-gem 'rails-html-sanitizer', '~> 1.6.1'
+gem 'actionmailer', '>= 7.1.4.1'
+gem 'actionpack', '>= 7.1.5.1'
+gem 'actiontext', '>= 7.1.4.1'
+gem 'rails-html-sanitizer', '>= 1.6.1'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
@@ -88,7 +88,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '~> 3.39'
+  gem 'capybara'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 5.0'
