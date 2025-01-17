@@ -52,7 +52,7 @@ gem 'email_validator'
 # Styling
 gem 'sassc', '~> 2.4'
 gem 'sassc-rails', '~> 2.1.2'
-gem 'tailwindcss-rails', '~> 2.7.7'
+gem 'tailwindcss-rails', '~> 3.1'
 
 # PDF parsing
 gem 'pdf-reader'
@@ -75,7 +75,7 @@ group :development do
   gem 'web-console'
 
   # Linters
-  gem 'rubocop', require: false 
+  gem 'rubocop', require: false
   gem 'rubocop-factory_bot', require: false
   gem 'rubocop-capybara', require: false
   gem 'rubocop-performance', '~> 1.12.0', require: false
