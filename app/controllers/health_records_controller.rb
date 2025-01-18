@@ -18,17 +18,17 @@ class HealthRecordsController < ApplicationController
   # GET /health_records/new
   def new
     @health_record = HealthRecord.new
-    # authorize @health_record
+    authorize @health_record
   end
 
   # GET /health_records/1/edit
   def edit
-    # authorize @health_record
+    authorize @health_record
   end
 
   # POST /health_records or /health_records.json
   def create
-    # authorize @health_record
+    authorize @health_record
 
     respond_to do |format|
       if @health_record.save

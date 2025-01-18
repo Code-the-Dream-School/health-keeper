@@ -7,7 +7,6 @@ class LabTestsController < ApplicationController
   before_action :build_lab_test, only: %i[create]
   before_action :set_filter_by_user_id, only: %i[index]
   before_action :set_biomarkers, only: %i[index new edit create]
-  before_action :set_filter_by_user_id, only: %i[index]
   before_action :set_biomarkers, only: %i[index new edit create]
 
   # GET /lab_tests or /lab_tests.json
@@ -30,16 +29,10 @@ class LabTestsController < ApplicationController
     authorize @lab_test
   end
 
-  # GET /lab_tests/new
+   # GET /lab_tests/new
   def new
     @lab_test = LabTest.new
     authorize @lab_test
-    @users = User.all if current_user.full_access_roles_can?
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream { render turbo_stream: turbo_stream.replace('lab_test_form', partial: 'form') }
-    end
     # @biomarkers = Biomarker.all
     @users = User.all if current_user.full_access_roles_can?
 
@@ -55,39 +48,26 @@ class LabTestsController < ApplicationController
   end
 
   # POST /lab_tests or /lab_tests.json
+# POST /lab_tests or /lab_tests.json
   def create
     authorize @lab_test
 
     ActiveRecord::Base.transaction do
       @health_record = HealthRecord.new(
-        user: lab_test_user,
+        user: set_user,
         notes: lab_test_params[:notes]
       )
 
       @lab_test.recordable = @health_record
 
-      respond_to do |format|
-        if save_health_record_with_lab_test
-          format.html { redirect_to @health_record, notice: t('.success') }
-          format.json { render :show, status: :created, location: @lab_test }
-        else
-          format.html do
-            @users = User.all if current_user.full_access_roles_can?
-            render :new, status: :unprocessable_entity
-          end
-          format.json { render json: @lab_test.errors, status: :unprocessable_entity }
-        end
+      if save_health_record_with_lab_test
+        handle_success_response
+      else
+        handle_error_response
       end
     end
-  rescue StandardError => e
-    respond_to do |format|
-      format.html do
-        flash.now[:alert] = 'An error occurred while saving the test.'
-        @users = User.all if current_user.full_access_roles_can?
-        render :new, status: :unprocessable_entity
-      end
-      format.json { render json: { error: e.message }, status: :unprocessable_entity }
-    end
+  rescue StandardError
+    handle_error_response('An error occurred while saving the test.')
   end
 
   # PATCH/PUT /lab_tests/1 or /lab_tests/1.json
