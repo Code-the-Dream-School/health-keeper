@@ -252,8 +252,8 @@ health_records.each do |health_record|
                Faker::Number.decimal(l_digits: 2, r_digits: 2)
              else
                Faker::Number.between(
-                 from: min_max_map[biomarker.name.to_sym][0],
-                 to: min_max_map[biomarker.name.to_sym][1]
+                 from: min_max_map.fetch(biomarker.name, [0, 100])[0],
+                 to: min_max_map.fetch(biomarker.name, [0, 100])[1]
                )
              end,
       unit: reference_range.unit,
@@ -294,6 +294,52 @@ end
 
 puts 'Seeding completed successfully!'
 
+Rails.logger.debug { "Admin role user credentials: email: \"#{users[0].email}\" and password: \"password\"" }
+Rails.logger.debug { "Doctor role user credentials: email: \"#{users[1].email}\" and password: \"password\"" }
+Rails.logger.debug { "HealthCoach role user credentials: email: \"#{users[2].email}\" and password: \"password\"" }
+Rails.logger.debug { "User role user credentials: email: \"#{users[3].email}\" and password: \"password\"" }
+
+# Create PDF samples
+Rails.logger.debug 'Creating PDF samples...'
+
+# Create sample PDFs for the admin user (first user)
+admin_user = users[0]
+admin_health_record = admin_user.health_records.first
+
+sample_pdfs = [
+  {
+    scan_method: 'sterling_accuris',
+    status: 'completed',
+    processed_data: { 
+      categories: {
+        'Blood Tests': [
+          { name: 'Hemoglobin', value: '14.5', unit: 'g/dL' }
+        ]
+      }
+    },
+    notes: 'Sample Sterling Accuris PDF'
+  },
+  {
+    scan_method: 'umc_pathology',
+    status: 'pending',
+    processed_data: {},
+    notes: 'Sample UMC Pathology PDF'
+  }
+]
+
+sample_pdfs.each do |pdf_data|
+  Pdf.find_or_create_by!(
+    scan_method: pdf_data[:scan_method],
+    user: admin_user,
+    health_record: admin_health_record
+  ) do |pdf|
+    pdf.status = pdf_data[:status]
+    pdf.processed_data = pdf_data[:processed_data]
+    pdf.notes = pdf_data[:notes]
+  end
+end
+
+Rails.logger.debug 'PDF samples created successfully!'
 puts "Admin role user credentials: email: \"#{users[0].email}\" and password: \"password\""
 puts "Doctor role user credentials: email: \"#{users[1].email}\" and password: \"password\""
 puts "HealthCoach role user credentials: email: \"#{users[2].email}\" and password: \"password\""

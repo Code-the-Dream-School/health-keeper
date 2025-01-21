@@ -2,7 +2,7 @@
 
 require 'faker'
 
-biomarkers = [
+BIOMARKER_NAMES = [
   'Glucose',
   'Hemoglobin',
   'Cholesterol',
@@ -27,11 +27,18 @@ biomarkers = [
   'ALT (SGPT)',
   'Bilirubin',
   'Albumin',
-  'Magnesium'
-]
+  'Magnesium',
+  'Neutrophils',
+  'Lymphocytes',
+  'Eosinophils',
+  'Monocytes',
+  'Basophils',
+  'Platelet Count',
+  'MPV'
+].freeze
 
 FactoryBot.define do
-  factory :biomarker do |f|
-    f.name { biomarkers.sample }
+  factory :biomarker do
+    sequence(:name) { |n| BIOMARKER_NAMES[n % BIOMARKER_NAMES.length] }
   end
 end

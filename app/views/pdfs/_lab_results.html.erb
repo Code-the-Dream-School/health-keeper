@@ -1,0 +1,39 @@
+<div class="lab-results">
+  <% data.each do |category, tests| %>
+    <div class="category-section mb-4">
+      <h3 class="text-lg font-semibold mb-2"><%= category %></h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Test</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Result</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Flag</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Unit</th>
+              <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Reference Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% tests.each do |test| %>
+              <tr class="border-t border-gray-200 hover:bg-gray-50">
+                <td class="px-4 py-2 text-sm"><%= test[:name] %></td>
+                <td class="px-4 py-2 text-sm">
+                  <span class="<%= test[:flag].present? ? 'text-red-600 font-semibold' : '' %>">
+                    <%= test[:value] %>
+                  </span>
+                </td>
+                <td class="px-4 py-2 text-sm text-red-600"><%= test[:flag] %></td>
+                <td class="px-4 py-2 text-sm text-gray-600"><%= test[:unit] %></td>
+                <td class="px-4 py-2 text-sm text-gray-600">
+                  <% if test[:reference_range][:min] && test[:reference_range][:max] %>
+                    <%= test[:reference_range][:min] %> - <%= test[:reference_range][:max] %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div> 

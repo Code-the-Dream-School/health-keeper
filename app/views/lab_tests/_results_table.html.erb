@@ -1,0 +1,35 @@
+<% @categorized_results.each do |category, tests| %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0"><%= category %></h5>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Test</th>
+            <th>Method</th>
+            <th>Result</th>
+            <th>Unit</th>
+            <th>Biological Ref. Interval</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tests.each do |test| %>
+            <tr>
+              <td><%= test[:name] %></td>
+              <td><%= test[:method] %></td>
+              <td><%= test[:value] %></td>
+              <td><%= test[:unit] %></td>
+              <td>
+                <% if test[:reference_range][:min] && test[:reference_range][:max] %>
+                  <%= "#{test[:reference_range][:min]} - #{test[:reference_range][:max]}" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %> 

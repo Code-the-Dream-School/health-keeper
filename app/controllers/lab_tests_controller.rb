@@ -4,6 +4,8 @@
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
   before_action :build_lab_test, only: %i[create]
+  before_action :set_filter_by_user_id, only: %i[index]
+  before_action :set_biomarkers, only: %i[index new edit create]
   before_action :set_biomarkers, only: %i[index new edit create]
 
   # GET /lab_tests or /lab_tests.json
@@ -19,18 +21,28 @@ class LabTestsController < ApplicationController
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
                   .where(lab_tests: { user_id: @chosen_user_id })
+
+    @lab_tests = LabTest.all
+    @categorized_results = LabTestCategorizer.categorize(@lab_tests)
   end
 
   # GET /lab_tests/1 or /lab_tests/1.json
   def show
     authorize @lab_test
+    @categorized_results = LabTestCategorizer.categorize([@lab_test])
   end
 
-  # GET /lab_tests/new
+   # GET /lab_tests/new
   def new
     @lab_test = LabTest.new
     authorize @lab_test
+    # @biomarkers = Biomarker.all
     @users = User.all if current_user.full_access_roles_can?
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream { render turbo_stream: turbo_stream.replace('lab_test_form', partial: 'form') }
+    end
   end
 
   # GET /lab_tests/1/edit
@@ -39,12 +51,13 @@ class LabTestsController < ApplicationController
   end
 
   # POST /lab_tests or /lab_tests.json
+# POST /lab_tests or /lab_tests.json
   def create
     authorize @lab_test
 
     ActiveRecord::Base.transaction do
       @health_record = HealthRecord.new(
-        user: lab_test_user,
+        user: set_user,
         notes: lab_test_params[:notes]
       )
 
