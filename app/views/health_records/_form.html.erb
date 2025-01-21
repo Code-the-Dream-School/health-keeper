@@ -1,14 +1,9 @@
 <%= form_with(model: health_record) do |form| %>
   <% if health_record.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(health_record.errors.count, "error") %> prohibited this health_record from being saved:</h2>
-
-      <ul>
-        <% health_record.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
+    <%= render "layouts/error_flash",
+               header: "#{pluralize(health_record.errors.count, "error")} prohibited this health record from being saved:",
+               errors: health_record.errors.full_messages
+    %>
   <% end %>
 
   <div>
@@ -17,6 +12,6 @@
   </div>
 
   <div>
-    <%= form.submit class: "tw-my-4 tw-bg-blue-500  tw-hover:bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded" %>
+    <%= form.submit class: "my-4 edit-button" %>
   </div>
 <% end %>

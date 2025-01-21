@@ -11,6 +11,7 @@ module Admin
 
     # GET /admin/users or /admin/users.json
     def index
+      authorize User
       @users = policy_scope(User.all)
     end
 

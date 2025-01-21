@@ -1,23 +1,23 @@
 <tbody>
     <% @users.each do |user| %>
-      <tr id="<%= dom_id user %>" class="tw-bg-white tw-border-b tw-bg-white tw-border-gray-300 tw-hover:bg-gray-700 tw-text-center">
-        <th scope="row" class="tw-px-6 tw-py-4 tw-font-medium tw-text-gray-900 tw-whitespace-nowrap tw-dark:tw-text-white">
+      <tr id="<%= dom_id user %>" class="bg-white border-b bg-white border-gray-300 hover:bg-gray-700 hover:text-white text-center">
+        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
           <%= user.full_name %>
         </th>
-        <td class="tw-px-2 tw-py-2">
+        <td class="px-2 py-2">
           <%= user.email %>
         </td>
-        <td class="tw-px-2 tw-py-2">
+        <td class="px-2 py-2">
           <%= user_roles_list_as_string user %>
         </td>
-        <td class="tw-px-6 tw-py-4">
+        <td class="px-6 py-4">
           <%= format_date_with_time user.created_at %>
         </td>
-        <td class="tw-px-6 tw-py-4">
+        <td class="px-6 py-4">
           <%= format_date_with_time user.updated_at %>
         </td>
-        <td class="tw-px-6 tw-py-4 tw-text-center">
-          <%= link_to "Show details", admin_user_url(user), class: "tw-font-medium tw-text-blue-600 tw-dark:tw-text-blue-500 tw-hover:tw-underline" %>
+        <td class="px-6 py-4 text-center">
+          <%= link_to "Show details", admin_user_url(user), class: "font-medium text-blue-600 dark:text-blue-500 hover:underline" %>
         </td>
       </tr>
     <% end %>

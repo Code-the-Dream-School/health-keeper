@@ -1,6 +1,6 @@
-<div class="tw-grid tw-grid-cols-3 tw-gap-4">
+<div class="grid grid-cols-3 gap-4">
   <% health_record.lab_tests.each do |lab_test| %>
-    <div class="tw-ring-2 tw-rounded-lg tw-p-4 tw-bg-teal-500">
+    <div class="ring-2 rounded-lg p-4 pb-0 bg-teal-500">
 
       <p>
         <strong>Biomarker Name:</strong>
@@ -38,7 +38,7 @@
               lab_test,
               method: :delete,
               data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-              class: "tw-bg-red-500 tw-hover:bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded"
+              class: "delete-button font-bold py-2 px-4 rounded"
             ) %>
       <% end %>
 

@@ -4,7 +4,6 @@
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
   before_action :build_lab_test, only: %i[create]
-  before_action :set_filter_by_user_id, only: %i[index]
   before_action :set_biomarkers, only: %i[index new edit create]
 
   # GET /lab_tests or /lab_tests.json
@@ -13,8 +12,10 @@ class LabTestsController < ApplicationController
     @recordables = policy_scope(LabTest)
                    .select(:recordable_id, :created_at)
                    .where(user_id: @chosen_user_id)
+                   .in_date_range(params[:start_date], params[:end_date])
                    .order(:created_at)
                    .group(:recordable_id, :created_at)
+
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
                   .where(lab_tests: { user_id: @chosen_user_id })
@@ -29,13 +30,7 @@ class LabTestsController < ApplicationController
   def new
     @lab_test = LabTest.new
     authorize @lab_test
-    # @biomarkers = Biomarker.all
     @users = User.all if current_user.full_access_roles_can?
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream { render turbo_stream: turbo_stream.replace('lab_test_form', partial: 'form') }
-    end
   end
 
   # GET /lab_tests/1/edit
@@ -49,7 +44,7 @@ class LabTestsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @health_record = HealthRecord.new(
-        user: set_user,
+        user: lab_test_user,
         notes: lab_test_params[:notes]
       )
 
@@ -122,7 +117,7 @@ class LabTestsController < ApplicationController
     @health_record.save && @lab_test.save
   end
 
-  def set_user
+  def lab_test_user
     if current_user.full_access_roles_can? && lab_test_params[:user_id].present?
       User.find(lab_test_params[:user_id])
     else
@@ -131,7 +126,8 @@ class LabTestsController < ApplicationController
   end
 
   def build_lab_test
-    @lab_test = current_user.lab_tests.build(lab_test_params)
+    user = lab_test_user
+    @lab_test = user.lab_tests.build(lab_test_params)
   end
 
   # Only allow a list of trusted parameters through.

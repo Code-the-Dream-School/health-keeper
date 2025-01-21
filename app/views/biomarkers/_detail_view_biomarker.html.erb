@@ -1,14 +1,14 @@
-<div id="<%= dom_id biomarker %>" class="tw-border-double tw-shadow-lg tw-ring-4 tw-rounded-lg">
-  <div class="tw-m-8">
+<div id="<%= dom_id biomarker %>" class="border-double shadow-lg ring-4 rounded-lg">
+  <div class="m-8">
 
-    <p class="tw-pt-2 tw-pr-6">
+    <p class="pt-2 pr-6">
       <strong>Name:</strong>
       <%= biomarker.name %>
     </p>
 
-    <div class="tw-flex tw-flex-row tw-space-x-4">
+    <div class="flex flex-row space-x-4">
       <% biomarker.reference_ranges.each do |reference_range| %>
-        <div class="tw-basis-1/3 tw-ring-2 tw-rounded-lg tw-p-4 tw-mb-4">
+        <div class="basis-1/3 ring-2 rounded-lg p-4 pb-0 mb-4">
           <p>
             <strong>Min value:</strong>
             <%= format_biomarker_value(reference_range.min_value, reference_range.unit) %>
@@ -40,7 +40,7 @@
                   reference_range,
                   method: :delete,
                   data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
-                  class: "tw-bg-red-500 tw-hover:bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded"
+                  class: "delete-button font-bold py-2 px-4 rounded"
                 ) %>
           <% end %>
 
