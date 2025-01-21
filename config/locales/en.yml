@@ -83,10 +83,27 @@ en:
       switch_user:
         success: "Client was switched"
         failure: "Client was not switched"
+  admin:
+    users:
+      update:
+        success: "User was successfully updated."
+      destroy:
+        success: "User was successfully removed."
+      update_roles:
+        success: "User roles were successfully updated."
+      update_assigned_users:
+        success: "Users were successfully assigned."
+      switch_user:
+        success: "Client was switched"
+        failure: "Client was not switched"
 
   application:
     user_not_authorized:
-      failure: "You are not authorized to perform this action."
+      failure: 'You are not authorized to perform this action.'
+
+  pdfs:
+    supported_labs: "We support only this list of PDF's templates and others won't be properly parsed: Quest Diagnostics, LabCorp, Mayo Clinic"
+    failure: "You are not authorized to perform this action."
 
   errors:
     messages:

@@ -3,12 +3,13 @@
 Rails.application.routes.draw do
   resources :biomarkers do
     resources :reference_ranges
+    resources :reference_ranges
   end
   resources :reference_ranges, only: %i[show new create edit update destroy]
-
-  resources :measurements
+  resources :measurements, only: [:index, :show]
   resources :lab_tests
   resources :health_records
+
   namespace :admin do
     resources :users, only: %i[index show edit update destroy] do
       member do
@@ -20,13 +21,14 @@ Rails.application.routes.draw do
       end
     end
   end
+
   devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get 'up' => 'rails/health#show', as: :rails_health_check
-
-  # Defines the root path route ("/")
-  root 'home#index'
+  
+  resources :pdfs do
+    collection do
+      delete :delete_selected
+    end
+  end
+  
+  root 'pdfs#new'
 end

@@ -1,0 +1,199 @@
+<div class="container mt-4">
+  <header class="tw-my-2 tw-flex tw-flex-center tw-justify-between tw-items-center">
+    <h1 class="tw-text-lg">Lab Reports</h1>
+    
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+      Upload PDF
+    </button>
+  </header>
+
+  <div class="tw-relative tw-overflow-x-auto tw-shadow-md tw-sm:tw-rounded-lg">
+    <% if @pdfs.any? %>
+      <%= form_tag delete_selected_pdfs_path, method: :delete, id: 'delete-pdfs-form' do %>
+        <table class="tw-w-full tw-text-sm tw-text-left tw-text-gray-500">
+          <thead class="tw-text-xs tw-text-gray-700 tw-uppercase tw-bg-gray-50">
+            <tr>
+              <th scope="col" class="tw-px-6 tw-py-3">
+                <div class="form-check">
+                  <%= check_box_tag 'select_all', '1', false, 
+                      class: 'form-check-input', 
+                      id: 'select-all-pdfs',
+                      data: { action: 'toggle-all-pdfs' } %>
+                  <label class="form-check-label" for="select-all-pdfs">
+                    Select All
+                  </label>
+                </div>
+              </th>
+              <th scope="col" class="tw-px-6 tw-py-3">Date</th>
+              <th scope="col" class="tw-px-6 tw-py-3">Format</th>
+              <th scope="col" class="tw-px-6 tw-py-3">Status</th>
+              <th scope="col" class="tw-px-6 tw-py-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @pdfs.each do |pdf| %>
+              <tr class="tw-bg-white tw-border-b hover:tw-bg-gray-50">
+                <td class="tw-px-6 tw-py-4">
+                  <div class="form-check">
+                    <%= check_box_tag 'pdf_ids[]', pdf.id, false, 
+                        class: 'form-check-input pdf-checkbox',
+                        id: "pdf-#{pdf.id}" %>
+                  </div>
+                </td>
+                <td class="tw-px-6 tw-py-4">
+                  <%= pdf.created_at.in_time_zone.strftime("%B %d, %Y %I:%M %p %Z") %>
+                </td>
+                <td class="tw-px-6 tw-py-4">
+                  <%= pdf.format_name %>
+                </td>
+                <td class="tw-px-6 tw-py-4">
+                  <span class="badge <%= case pdf.status
+                    when 'completed' then 'bg-success'
+                    when 'failed' then 'bg-danger'
+                    when 'processing' then 'bg-warning'
+                    else 'bg-secondary'
+                    end %>">
+                    <%= pdf.status&.humanize %>
+                  </span>
+                </td>
+                <td class="tw-px-6 tw-py-4">
+                  <%= link_to 'View', pdf_path(pdf), class: "btn btn-sm btn-primary" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <div class="text-end mt-4">
+          <%= button_tag type: 'submit',
+              class: 'btn btn-danger',
+              id: 'delete-selected-button',
+              disabled: true,
+              data: { 
+                confirm: "Are you sure you want to delete the selected PDFs? This action cannot be undone.",
+                turbo_confirm: "Are you sure you want to delete the selected PDFs? This action cannot be undone."
+              } do %>
+            <i class="fas fa-trash-alt me-1"></i> Delete Selected
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="alert alert-info text-center" role="alert">
+        No lab reports uploaded yet.
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Upload Lab Report PDF</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= form_with(model: @pdf, local: true, multipart: true, data: { turbo: false }) do |f| %>
+          <div class="mb-3">
+            <label class="form-label">Lab Report Format</label>
+            <%= f.select :scan_method, 
+                options_for_select([
+                  ["Sterling Accuris", "sterling_accuris"],
+                  ["University Medical Center, Dept. of Pathology", "umc_pathology"]
+                ]), 
+                { prompt: "Select a format" },
+                { required: true, class: "form-select" } %>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <%= f.text_area :notes, class: "form-control", rows: 3, placeholder: "Add any notes about this lab report..." %>
+          </div>
+
+          <div id="pdf-upload-field" style="display: none;" class="mb-3">
+            <label class="form-label">PDF File</label>
+            <%= f.file_field :file, 
+                accept: "application/pdf", 
+                required: true,
+                class: "form-control" %>
+          </div>
+
+          <%= f.submit "Upload and Process", 
+              id: "submit-button",
+              disabled: true,
+              class: "btn btn-primary w-100" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Upload form handling
+  const methodSelect = document.querySelector('select[name="pdf[scan_method]"]');
+  const uploadField = document.getElementById('pdf-upload-field');
+  const submitButton = document.getElementById('submit-button');
+  const fileInput = document.querySelector('input[type="file"]');
+  const form = document.querySelector('form');
+
+  methodSelect?.addEventListener('change', function() {
+    if (this.value) {
+      uploadField.style.display = 'block';
+      checkFormValidity();
+    } else {
+      uploadField.style.display = 'none';
+      submitButton.disabled = true;
+    }
+  });
+
+  fileInput?.addEventListener('change', function() {
+    checkFormValidity();
+  });
+
+  function checkFormValidity() {
+    submitButton.disabled = !(methodSelect.value && fileInput.files.length > 0);
+  }
+
+  form?.addEventListener('submit', function(e) {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+    if (modal) {
+      modal.hide();
+    }
+  });
+
+  // PDF selection handling
+  const selectAllCheckbox = document.getElementById('select-all-pdfs');
+  const pdfCheckboxes = document.querySelectorAll('.pdf-checkbox');
+  const deleteButton = document.getElementById('delete-selected-button');
+
+  function updateDeleteButtonState() {
+    const checkedBoxes = document.querySelectorAll('.pdf-checkbox:checked');
+    deleteButton.disabled = checkedBoxes.length === 0;
+  }
+
+  selectAllCheckbox?.addEventListener('change', function() {
+    pdfCheckboxes.forEach(checkbox => {
+      checkbox.checked = this.checked;
+    });
+    updateDeleteButtonState();
+  });
+
+  pdfCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const allChecked = Array.from(pdfCheckboxes).every(cb => cb.checked);
+      const anyChecked = Array.from(pdfCheckboxes).some(cb => cb.checked);
+      
+      if (selectAllCheckbox) {
+        selectAllCheckbox.checked = allChecked;
+        selectAllCheckbox.indeterminate = anyChecked && !allChecked;
+      }
+      
+      updateDeleteButtonState();
+    });
+  });
+
+  updateDeleteButtonState();
+});
+</script>

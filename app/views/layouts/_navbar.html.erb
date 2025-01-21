@@ -9,7 +9,34 @@
            "no-underline text-gray-700 hover:text-black #{current_page?(page_path) ? 'font-bold text-black' : ''}"
          end
       %>
-      <%= link_to "Health records", health_records_path, class: "#{nav_bar_classes(health_records_path)}" %>
+
+      <%# Health Records Dropdown %>
+      <div class="relative" x-data="{ open: false }">
+        <button @click="open = !open" 
+                @click.away="open = false"
+                class="flex items-center space-x-1 text-gray-700 hover:text-black <%= 'font-bold text-black' if controller_name == 'health_records' || controller_name == 'pdfs' %>">
+          <span>Health Records</span>
+          <svg class="w-4 h-4 transition-transform duration-200" 
+               :class="{ 'rotate-180': open }"
+               fill="currentColor" 
+               viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+        
+        <div x-show="open" 
+             x-transition
+             class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+          <div class="py-1">
+            <%= link_to "View All Records", health_records_path, 
+                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 #{controller_name == 'health_records' ? 'font-bold bg-gray-50' : ''}" %>
+            <div class="border-t border-gray-100"></div>
+            <%= link_to "View PDFs", pdfs_path, 
+                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 #{controller_name == 'pdfs' ? 'font-bold bg-gray-50' : ''}" %>
+          </div>
+        </div>
+      </div>
+
       <%= link_to "Lab tests", lab_tests_path, class: "#{nav_bar_classes(lab_tests_path)}" %>
       <%= link_to "Measurements", measurements_path, class: "#{nav_bar_classes(measurements_path)}" %>
       <%= link_to "Biomarkers", biomarkers_path, class: "#{nav_bar_classes(biomarkers_path)}" %>

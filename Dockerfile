@@ -14,7 +14,8 @@ RUN apt-get update -qq && apt-get install -y \
   libreadline-dev \
   zlib1g-dev \
   build-essential \
-  curl
+  curl \
+  yarn
 
 # Set the working directory
 WORKDIR /app
