@@ -75,6 +75,8 @@ RSpec.configure do |config|
 
   # Include Devise test helpers for request specs
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  config.include LabTestFactoryHelper
 end
 
 Shoulda::Matchers.configure do |config|

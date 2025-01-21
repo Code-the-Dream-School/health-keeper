@@ -1,128 +1,146 @@
-<div class="container mt-4">
-  <header class="tw-my-2 tw-flex tw-flex-center tw-justify-between tw-items-center">
-    <h1 class="tw-text-lg">Lab Reports</h1>
+<div class="container mx-auto px-4 mt-8">
+  <header class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-800">Lab Reports</h1>
     
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+    <button type="button" class="inline-flex items-center px-4 py-2.5 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" 
+            onclick="document.getElementById('uploadModal').classList.remove('hidden')">
       Upload PDF
     </button>
   </header>
 
-  <div class="tw-relative tw-overflow-x-auto tw-shadow-md tw-sm:tw-rounded-lg">
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden">
     <% if @pdfs.any? %>
       <%= form_tag delete_selected_pdfs_path, method: :delete, id: 'delete-pdfs-form' do %>
-        <table class="tw-w-full tw-text-sm tw-text-left tw-text-gray-500">
-          <thead class="tw-text-xs tw-text-gray-700 tw-uppercase tw-bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <th scope="col" class="tw-px-6 tw-py-3">
-                <div class="form-check">
+              <th scope="col" class="px-6 py-4">
+                <div class="flex items-center">
                   <%= check_box_tag 'select_all', '1', false, 
-                      class: 'form-check-input', 
+                      class: 'h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500', 
                       id: 'select-all-pdfs',
                       data: { action: 'toggle-all-pdfs' } %>
-                  <label class="form-check-label" for="select-all-pdfs">
+                  <label class="ml-3 text-sm font-medium text-gray-700" for="select-all-pdfs">
                     Select All
                   </label>
                 </div>
               </th>
-              <th scope="col" class="tw-px-6 tw-py-3">Date</th>
-              <th scope="col" class="tw-px-6 tw-py-3">Format</th>
-              <th scope="col" class="tw-px-6 tw-py-3">Status</th>
-              <th scope="col" class="tw-px-6 tw-py-3">Actions</th>
+              <th scope="col" class="px-6 py-3">Date</th>
+              <th scope="col" class="px-6 py-3">Format</th>
+              <th scope="col" class="px-6 py-3">Status</th>
+              <th scope="col" class="px-6 py-3">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="divide-y divide-gray-200 bg-white">
             <% @pdfs.each do |pdf| %>
-              <tr class="tw-bg-white tw-border-b hover:tw-bg-gray-50">
-                <td class="tw-px-6 tw-py-4">
-                  <div class="form-check">
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
                     <%= check_box_tag 'pdf_ids[]', pdf.id, false, 
-                        class: 'form-check-input pdf-checkbox',
+                        class: 'h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 pdf-checkbox',
                         id: "pdf-#{pdf.id}" %>
                   </div>
                 </td>
-                <td class="tw-px-6 tw-py-4">
+                <td class="px-6 py-4">
                   <%= pdf.created_at.in_time_zone.strftime("%B %d, %Y %I:%M %p %Z") %>
                 </td>
-                <td class="tw-px-6 tw-py-4">
+                <td class="px-6 py-4">
                   <%= pdf.format_name %>
                 </td>
-                <td class="tw-px-6 tw-py-4">
-                  <span class="badge <%= case pdf.status
-                    when 'completed' then 'bg-success'
-                    when 'failed' then 'bg-danger'
-                    when 'processing' then 'bg-warning'
-                    else 'bg-secondary'
+                <td class="px-6 py-4">
+                  <span class="px-3 py-1 text-sm font-medium rounded-full <%= case pdf.status
+                    when 'completed' then 'bg-green-100 text-green-800'
+                    when 'failed' then 'bg-red-100 text-red-800'
+                    when 'processing' then 'bg-yellow-100 text-yellow-800'
+                    else 'bg-gray-100 text-gray-800'
                     end %>">
                     <%= pdf.status&.humanize %>
                   </span>
                 </td>
-                <td class="tw-px-6 tw-py-4">
-                  <%= link_to 'View', pdf_path(pdf), class: "btn btn-sm btn-primary" %>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= link_to 'View', pdf_path(pdf), 
+                      class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
                 </td>
               </tr>
             <% end %>
           </tbody>
         </table>
 
-        <div class="text-end mt-4">
+        <div class="px-6 py-4 bg-gray-50 text-right">
           <%= button_tag type: 'submit',
-              class: 'btn btn-danger',
+              class: 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed',
               id: 'delete-selected-button',
               disabled: true,
               data: { 
                 confirm: "Are you sure you want to delete the selected PDFs? This action cannot be undone.",
                 turbo_confirm: "Are you sure you want to delete the selected PDFs? This action cannot be undone."
               } do %>
-            <i class="fas fa-trash-alt me-1"></i> Delete Selected
+            <i class="fas fa-trash-alt mr-2"></i> Delete Selected
           <% end %>
         </div>
       <% end %>
     <% else %>
-      <div class="alert alert-info text-center" role="alert">
-        No lab reports uploaded yet.
+      <div class="p-8 text-center">
+        <div class="inline-flex items-center px-4 py-3 rounded-md text-sm text-blue-700 bg-blue-50" role="alert">
+          No lab reports uploaded yet.
+        </div>
       </div>
     <% end %>
   </div>
 </div>
 
-<!-- Upload Modal -->
-<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="uploadModalLabel">Upload Lab Report PDF</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <%= form_with(model: @pdf, local: true, multipart: true, data: { turbo: false }) do |f| %>
-          <div class="mb-3">
-            <label class="form-label">Lab Report Format</label>
+<!-- Modal with improved styling -->
+<div id="uploadModal" class="hidden fixed inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="flex justify-between items-center pb-4 border-b">
+          <h3 class="text-lg font-medium text-gray-900" id="modal-title">Upload Lab Report PDF</h3>
+          <button type="button" class="text-gray-400 hover:text-gray-500" 
+                  onclick="document.getElementById('uploadModal').classList.add('hidden')">
+            <span class="sr-only">Close</span>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <%= form_with(model: @pdf, local: true, multipart: true, data: { turbo: false }, class: "mt-4") do |f| %>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Lab Report Format</label>
             <%= f.select :scan_method, 
                 options_for_select([
                   ["Sterling Accuris", "sterling_accuris"],
                   ["University Medical Center, Dept. of Pathology", "umc_pathology"]
                 ]), 
                 { prompt: "Select a format" },
-                { required: true, class: "form-select" } %>
+                { required: true, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" } %>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Notes</label>
-            <%= f.text_area :notes, class: "form-control", rows: 3, placeholder: "Add any notes about this lab report..." %>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+            <%= f.text_area :notes, 
+                class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm", 
+                rows: 3, 
+                placeholder: "Add any notes about this lab report..." %>
           </div>
 
-          <div id="pdf-upload-field" style="display: none;" class="mb-3">
-            <label class="form-label">PDF File</label>
+          <div id="pdf-upload-field" class="hidden mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">PDF File</label>
             <%= f.file_field :file, 
                 accept: "application/pdf", 
                 required: true,
-                class: "form-control" %>
+                class: "mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
           </div>
 
-          <%= f.submit "Upload and Process", 
-              id: "submit-button",
-              disabled: true,
-              class: "btn btn-primary w-100" %>
+          <div class="mt-6">
+            <%= f.submit "Upload and Process", 
+                id: "submit-button",
+                disabled: true,
+                class: "w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed" %>
+          </div>
         <% end %>
       </div>
     </div>
@@ -137,13 +155,47 @@ document.addEventListener('DOMContentLoaded', function() {
   const submitButton = document.getElementById('submit-button');
   const fileInput = document.querySelector('input[type="file"]');
   const form = document.querySelector('form');
+  const modal = document.getElementById('uploadModal');
+  const openModalButton = document.querySelector('button[onclick*="uploadModal"]');
+
+  // Hide upload field initially and when modal opens
+  function resetForm() {
+    if (uploadField) {
+      uploadField.classList.add('hidden');
+    }
+    if (methodSelect) {
+      methodSelect.value = '';
+    }
+    if (fileInput) {
+      fileInput.value = '';
+    }
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
+  }
+
+  // Reset form when modal opens
+  openModalButton?.addEventListener('click', function(e) {
+    modal.classList.remove('hidden');
+    resetForm();
+  });
+
+  // Close modal button handler
+  const closeModalButton = document.querySelector('button[onclick*="uploadModal"].classList.add');
+  closeModalButton?.addEventListener('click', function(e) {
+    modal.classList.add('hidden');
+    resetForm();
+  });
 
   methodSelect?.addEventListener('change', function() {
-    if (this.value) {
-      uploadField.style.display = 'block';
+    if (this.value && this.value !== '') {
+      uploadField?.classList.remove('hidden');
       checkFormValidity();
     } else {
-      uploadField.style.display = 'none';
+      uploadField?.classList.add('hidden');
+      if (fileInput) {
+        fileInput.value = '';
+      }
       submitButton.disabled = true;
     }
   });
@@ -153,15 +205,26 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function checkFormValidity() {
-    submitButton.disabled = !(methodSelect.value && fileInput.files.length > 0);
+    if (submitButton) {
+      submitButton.disabled = !(methodSelect?.value && fileInput?.files.length > 0);
+    }
   }
 
-  form?.addEventListener('submit', function(e) {
-    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
-    if (modal) {
-      modal.hide();
+  // Close modal when clicking outside
+  window.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+      resetForm();
     }
   });
+
+  // Handle form submission
+  form?.addEventListener('submit', function(e) {
+    modal.classList.add('hidden');
+  });
+
+  // Initial setup
+  resetForm();
 
   // PDF selection handling
   const selectAllCheckbox = document.getElementById('select-all-pdfs');

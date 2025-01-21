@@ -1,6 +1,38 @@
 module LabTestCategorization
   extend ActiveSupport::Concern
 
+  SPECIAL_TEST_MAPPINGS = {
+    'glucose' => ['sugar'],
+    'haemoglobin' => ['hb'],
+    'a1c' => ['hba1c', 'glycosylated'],
+    'ldl' => ['ldl'],
+    'hdl' => ['hdl'],
+    'sgpt' => ['alt'],
+    'sgot' => ['ast'],
+    'esr' => ['erythrocyte sedimentation rate'],
+    'creatinine' => ['creatinine'],
+    'urea' => ['urea'],
+    'bilirubin' => ['bilirubin'],
+    'albumin' => ['albumin'],
+    'globulin' => ['globulin'],
+    'protein' => ['protein'],
+    'iron' => ['iron'],
+    'tibc' => ['iron binding capacity'],
+    'transferrin' => ['transferrin'],
+    'vitamin' => ['vitamin'],
+    'hbsag' => ['hbsag'],
+    'hiv' => ['hiv'],
+    'psa' => ['prostate'],
+    'ige' => ['ige'],
+    'hb a' => ['hb a'],
+    'foetal' => ['foetal'],
+    'concentration' => ['concentration'],
+    'urine' => ['urine'],
+    'cells' => ['cells'],
+    'casts' => ['casts'],
+    'crystals' => ['crystals']
+  }.freeze
+
   def format_lab_results(lab_tests)
     Rails.logger.debug "\n=== STARTING LAB TEST PROCESSING ==="
     Rails.logger.debug "Total lab tests to process: #{lab_tests.size}"
@@ -31,10 +63,10 @@ module LabTestCategorization
                      .gsub(/\s+/, ' ')                     # Normalize spaces
                      .strip
 
-      # Try to find the category for this test
+      # Finding the category for this test
       category_found = false
       
-      # First, try exact match
+      # First, exact keyword match
       LAB_TEST_CATEGORIES.each do |category, config|
         if config[:tests].any? { |t| normalize_test_name(t) == test_name }
           add_test_to_category(results, category, test_data)
@@ -63,7 +95,7 @@ module LabTestCategorization
       end
     end
 
-    # Sort categories according to their order in LAB_TEST_CATEGORIES
+    # Sorting categories according to their order in LAB_TEST_CATEGORIES
     ordered_results = LAB_TEST_CATEGORIES.keys.each_with_object({}) do |category, hash|
       hash[category] = results[category] if results[category]
     end
@@ -97,37 +129,11 @@ module LabTestCategorization
     category_tests.any? do |category_test|
       normalized_category = normalize_test_name(category_test)
       
-      # Special case handling
-      return true if test_name.include?('glucose') && normalized_category.include?('sugar')
-      return true if test_name.include?('haemoglobin') && normalized_category.include?('hb')
-      return true if test_name.include?('a1c') && (normalized_category.include?('hba1c') || normalized_category.include?('glycosylated'))
-      return true if test_name.include?('ldl') && normalized_category.include?('ldl')
-      return true if test_name.include?('hdl') && normalized_category.include?('hdl')
-      return true if test_name.include?('sgpt') && normalized_category.include?('alt')
-      return true if test_name.include?('sgot') && normalized_category.include?('ast')
-      return true if test_name.include?('esr') && normalized_category.include?('erythrocyte sedimentation rate')
-      return true if test_name.include?('creatinine') && normalized_category.include?('creatinine')
-      return true if test_name.include?('urea') && normalized_category.include?('urea')
-      return true if test_name.include?('bilirubin') && normalized_category.include?('bilirubin')
-      return true if test_name.include?('albumin') && normalized_category.include?('albumin')
-      return true if test_name.include?('globulin') && normalized_category.include?('globulin')
-      return true if test_name.include?('protein') && normalized_category.include?('protein')
-      return true if test_name.include?('iron') && normalized_category.include?('iron')
-      return true if test_name.include?('tibc') && normalized_category.include?('iron binding capacity')
-      return true if test_name.include?('transferrin') && normalized_category.include?('transferrin')
-      return true if test_name.include?('vitamin') && normalized_category.include?('vitamin')
-      return true if test_name.include?('hbsag') && normalized_category.include?('hbsag')
-      return true if test_name.include?('hiv') && normalized_category.include?('hiv')
-      return true if test_name.include?('psa') && normalized_category.include?('prostate')
-      return true if test_name.include?('ige') && normalized_category.include?('ige')
-      return true if test_name.include?('hb a') && normalized_category.include?('hb a')
-      return true if test_name.include?('foetal') && normalized_category.include?('foetal')
-      return true if test_name.include?('concentration') && normalized_category.include?('concentration')
-      return true if test_name.include?('urine') && normalized_category.include?('urine')
-      return true if test_name.include?('cells') && normalized_category.include?('cells')
-      return true if test_name.include?('casts') && normalized_category.include?('casts')
-      return true if test_name.include?('crystals') && normalized_category.include?('crystals')
-      
+      # Check special mappings
+      return true if SPECIAL_TEST_MAPPINGS.any? do |test_key, category_values|
+        test_name.include?(test_key) && category_values.any? { |value| normalized_category.include?(value) }
+      end
+
       # Standard matching
       normalized_test.include?(normalized_category) || 
       normalized_category.include?(normalized_test) ||

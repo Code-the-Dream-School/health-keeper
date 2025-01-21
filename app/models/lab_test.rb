@@ -5,6 +5,7 @@ class LabTest < ApplicationRecord
   belongs_to :biomarker
   belongs_to :recordable, polymorphic: true, touch: true
   belongs_to :reference_range
+  belongs_to :pdf, optional: true
 
   validates :unit, presence: true
   validates :value, presence: true,
@@ -40,7 +41,7 @@ class LabTest < ApplicationRecord
   def within_reference_range?
     return false unless value && reference_range
 
-    value.between?(reference_range.min_value, reference_range.max_value)
+    value.to_f.between?(reference_range.min_value.to_f, reference_range.max_value.to_f)
   end
 
   def status

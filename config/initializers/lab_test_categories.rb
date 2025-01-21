@@ -9,7 +9,11 @@ LAB_TEST_CATEGORIES = {
   },
   'Differential Count' => {
     columns: ['Test', 'Method', 'Result', 'Unit', 'Absolute Count'],
-    tests: ['Neutrophils', 'Lymphocytes', 'Eosinophils', 'Monocytes', 'Basophils', 'Platelet Count', 'MPV']
+    tests: [
+      'Neutrophils', 'Lymphocytes', 'Eosinophils', 'Monocytes', 'Basophils',
+      'Neutrophils Absolute', 'Lymphocytes Absolute', 'Eosinophils Absolute', 'Monocytes Absolute', 'Basophils Absolute',
+      'Platelet Count', 'MPV'
+    ]
   },
   'Peripheral Smear Examination' => {
     columns: ['Test', 'Result'],

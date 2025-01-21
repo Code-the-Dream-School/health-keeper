@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # rubocop:disable Metrics/ClassLength
-# rubocop:disable Metrics/ClassLength
 class LabTestsController < ApplicationController
   before_action :set_lab_test, only: %i[show edit update destroy]
   before_action :build_lab_test, only: %i[create]
@@ -22,11 +21,15 @@ class LabTestsController < ApplicationController
     @biomarkers = policy_scope(Biomarker)
                   .includes(:reference_ranges, :lab_tests)
                   .where(lab_tests: { user_id: @chosen_user_id })
+
+    @lab_tests = LabTest.all
+    @categorized_results = LabTestCategorizer.categorize(@lab_tests)
   end
 
   # GET /lab_tests/1 or /lab_tests/1.json
   def show
     authorize @lab_test
+    @categorized_results = LabTestCategorizer.categorize([@lab_test])
   end
 
    # GET /lab_tests/new
